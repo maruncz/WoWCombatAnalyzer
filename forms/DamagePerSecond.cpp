@@ -38,6 +38,12 @@ void DamagePerSecond::updateChart()
     axisY.setRange(0,0);
 
     auto selectedSources = ui->listSource->selectionModel()->selectedRows();
+    auto selectedTargets = ui->listTarget->selectionModel()->selectedRows();
+    QStringList selectedTargetNames;
+    for(auto e : selectedTargets)
+    {
+        selectedTargetNames.append(targetNamesList.at(e.row()));
+    }
 
     auto timeOffset = originalLog->getLines().front().getTimestamp().toMSecsSinceEpoch();
 
@@ -45,20 +51,29 @@ void DamagePerSecond::updateChart()
     {
         auto sourceName = sourceNamesList.at(e.row());
 
-        auto filter = [sourceName](const LogLine &l)
+        auto filter = [sourceName, &selectedTargetNames](const LogLine &l)
         {
             if(l.getSourceObject().name != sourceName)
             {
                 return false;
             }
 
-            if((l.getSubeventType() == SubEvent::SPELL_DAMAGE)
-                || (l.getSubeventType() == SubEvent::SPELL_PERIODIC_DAMAGE)
-                || (l.getSubeventType() == SubEvent::SWING_DAMAGE))
+            if(!((l.getSubeventType() == SubEvent::SPELL_DAMAGE)
+                  || (l.getSubeventType() == SubEvent::SPELL_PERIODIC_DAMAGE)
+                  || (l.getSubeventType() == SubEvent::SWING_DAMAGE)))
             {
-                return true;
+                return false;
             }
-            return false;
+
+            if(!selectedTargetNames.empty())
+            {
+                if(!selectedTargetNames.contains(l.getDestObject().name))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         };
 
         auto temporaryLog = originalLog->filter(filter);
@@ -92,17 +107,17 @@ void DamagePerSecond::updateChart()
 #endif
 
             auto samples = sampler.addValue(e.getTimestamp().toMSecsSinceEpoch() - timeOffset,
-                             std::visit([](auto &&arg) -> qreal {
-                                 using T = std::decay_t<decltype(arg)>;
-                                 if constexpr (std::is_base_of_v<detail::suffix::Damage,T>)
-                                 {
-                                     return arg.amount;
-                                 }
-                                 else
-                                 {
-                                     throw std::runtime_error("unhandled case");
-                                 }
-                             },e.getSubEventValue()));
+                                            std::visit([](auto &&arg) -> qreal {
+                                                using T = std::decay_t<decltype(arg)>;
+                                                if constexpr (std::is_base_of_v<detail::suffix::Damage,T>)
+                                                {
+                                                    return arg.amount;
+                                                }
+                                                else
+                                                {
+                                                    throw std::runtime_error("unhandled case");
+                                                }
+                                            },e.getSubEventValue()));
             if(samples.has_value())
             {
                 for(const auto &sample : samples.value())

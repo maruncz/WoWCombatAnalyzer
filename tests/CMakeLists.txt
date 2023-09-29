@@ -14,4 +14,4 @@ FetchContent_MakeAvailable(ut)
 
 add_executable(SubSamplerTest SubSamplerTest.cpp)
 target_link_libraries(SubSamplerTest PRIVATE Boost::ut filters)
-
+add_test(SubSamplerTest SubSamplerTest)
