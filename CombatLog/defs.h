@@ -4,7 +4,6 @@
 #include <QString>
 #include <QStringList>
 
-
 enum class SubEvent
 {
 SPELL_CAST_SUCCESS,
@@ -32,7 +31,10 @@ SPELL_CAST_SUCCESS,
     SPELL_DISPEL,
     SPELL_SUMMON,
     DAMAGE_SHIELD_MISSED,
-    SPELL_PERIODIC_LEECH
+    SPELL_PERIODIC_LEECH,
+    SPELL_CREATE,
+    RANGE_DAMAGE,
+    SPELL_INSTAKILL
 };
 
 #if 0

@@ -11,6 +11,18 @@ class LogLine
 public:
     [[nodiscard]] static LogLine fromRawData(QString s);
 
+    [[nodiscard]] bool filter() const;
+
+    QDateTime getTimestamp() const;
+
+    Object getSourceObject() const;
+
+    Object getDestObject() const;
+
+    SubEvent getSubeventType() const;
+
+    variant_t getSubEventValue() const;
+
 private:
     [[nodiscard]] static QStringList parseTokens(QString s);
     [[nodiscard]] static QDateTime parseTimestamp(QString s);

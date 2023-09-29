@@ -154,6 +154,18 @@ SubEvent LogLine::subeventTypeFromString(QString s)
     {
         return SubEvent::SPELL_PERIODIC_LEECH;
     }
+    else if(s == "SPELL_CREATE")
+    {
+        return SubEvent::SPELL_CREATE;
+    }
+    else if(s == "RANGE_DAMAGE")
+    {
+        return SubEvent::RANGE_DAMAGE;
+    }
+    else if(s == "SPELL_INSTAKILL")
+    {
+        return SubEvent::SPELL_INSTAKILL;
+    }
 
 
     throw CombatLogParserException(QString("unknown subEvent: %1").arg(s).toStdString());
@@ -214,6 +226,37 @@ variant_t LogLine::subeventValueFromString(SubEvent type, QStringList list)
         return {DamageShieldMissed{list}};
     case SubEvent::SPELL_PERIODIC_LEECH:
         return {SpellPeriodicLeech{list}};
+    case SubEvent::SPELL_CREATE:
+        return {SpellCreate{list}};
+    case SubEvent::RANGE_DAMAGE:
+        return {RangeDamage{list}};
+    case SubEvent::SPELL_INSTAKILL:
+        return {SpellInstakill{list}};
     }
     throw CombatLogParserException(QString("unhandled subevent: %1").arg(list.at(0)).toStdString());
+}
+
+variant_t LogLine::getSubEventValue() const
+{
+    return subEventValue;
+}
+
+SubEvent LogLine::getSubeventType() const
+{
+    return subeventType;
+}
+
+Object LogLine::getDestObject() const
+{
+    return destObject;
+}
+
+Object LogLine::getSourceObject() const
+{
+    return sourceObject;
+}
+
+QDateTime LogLine::getTimestamp() const
+{
+    return timestamp;
 }

@@ -4,10 +4,10 @@
 
 UnitFlags UnitFlags::fromNum(uint32_t n)
 {
-    static constexpr uint32_t unusedBits{Reaction::unused | Type::unused | Special::unused};
+    static constexpr uint32_t unusedBits{Reaction::unused | Type::unused};
     if(n & unusedBits)
     {
-        throw CombatLogParserException(QString("undefined bits set: %1").arg(n & unusedBits, 8,16).toStdString());
+        throw CombatLogParserException(QString("undefined bits set: 0x%1").arg(n & unusedBits, 8,16).toStdString());
     }
 
     UnitFlags ret;

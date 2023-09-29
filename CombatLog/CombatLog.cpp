@@ -22,9 +22,54 @@ CombatLog CombatLog::fromFile(QString filename)
             throw CombatLogParserException(QString("Line too long: %1").arg(line.size()).toStdString());
         }
 
-        ret.lines.append(LogLine::fromRawData(line));
+        ret.append(LogLine::fromRawData(line));
     }
 
-
+    ret.finalize();
     return ret;
+}
+
+const QList<LogLine> &CombatLog::getLines() const
+{
+    return lines;
+}
+
+void CombatLog::append(LogLine line)
+{
+    lines.append(line);
+
+    {
+        auto sourceName = line.getSourceObject().name;
+        if(!sourceNames.contains(sourceName))
+        {
+            sourceNames.append(sourceName);
+        }
+    }
+    {
+        auto targetName = line.getDestObject().name;
+        if(!targetNames.contains(targetName))
+        {
+            targetNames.append(targetName);
+        }
+    }
+}
+
+void CombatLog::finalize()
+{
+    sourceNames.sort();
+    targetNames.sort();
+}
+
+
+
+const QStringList& CombatLog::getTargetNames() const
+{
+    return targetNames;
+}
+
+
+
+const QStringList& CombatLog::getSourceNames() const
+{
+    return sourceNames;
 }
