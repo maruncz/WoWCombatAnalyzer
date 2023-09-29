@@ -27,6 +27,7 @@ jobs:
       with:
         # Version of Qt to install
         version: 6.2.4 # optional, default is 5.15.2
+        modules: qtcharts
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
