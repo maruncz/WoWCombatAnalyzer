@@ -92,20 +92,6 @@ void DamagePerSecond::updateChart()
 
         for(const auto  &e : temporaryLog.getLines())
         {
-#if 0
-            qDebug() << "in:" << e.getTimestamp().toMSecsSinceEpoch() - timeOffset << ',' <<                              std::visit([](auto &&arg) -> qreal {
-                using T = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_base_of_v<detail::suffix::Damage,T>)
-                {
-                    return arg.amount;
-                }
-                else
-                {
-                    throw std::runtime_error("unhandled case");
-                }
-            },e.getSubEventValue());
-#endif
-
             auto samples = sampler.addValue(e.getTimestamp().toMSecsSinceEpoch() - timeOffset,
                                             std::visit([](auto &&arg) -> qreal {
                                                 using T = std::decay_t<decltype(arg)>;
@@ -122,18 +108,16 @@ void DamagePerSecond::updateChart()
             {
                 for(const auto &sample : samples.value())
                 {
-                    line->append(sample.first, sample.second);
+                    line->append(sample.first/1000, sample.second);
                 }
-                //qDebug() << "out:" << sample->first << ',' << sample->second;
             }
         }
 
         {
             auto sample = sampler.finalize();
-            line->append(sample.first, sample.second);
-            //qDebug() << "out:" << sample.first << ',' << sample.second;
+            line->append(sample.first/1000, sample.second);
             adjustYRange(sampler.getMinmaxY().first,sampler.getMinmaxY().second);
-            adjustXRange(sampler.getMinmaxX().first,sampler.getMinmaxX().second);
+            adjustXRange(sampler.getMinmaxX().first/1000,sampler.getMinmaxX().second/1000);
         }
 
 
