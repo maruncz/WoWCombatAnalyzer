@@ -1,10 +1,10 @@
 #ifndef LINEPARSER_H
 #define LINEPARSER_H
 
+#include "SubEvents.h"
 #include "defs.h"
 #include <QString>
 #include <QStringList>
-#include "SubEvents.h"
 
 class LineParser
 {
@@ -22,7 +22,6 @@ public:
     [[nodiscard]] static MissType parseMissType(QString s);
 
 private:
-
     template<typename T>
     [[nodiscard]] static T parseNumber(QString s, uint8_t base);
 };

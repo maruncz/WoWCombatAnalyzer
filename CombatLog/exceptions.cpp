@@ -1,9 +1,9 @@
 #include "exceptions.h"
 
-
-CombatLogParserException::CombatLogParserException(std::string msg, std::source_location loc) : message{std::move(msg)}, place{std::move(loc)}
+CombatLogParserException::CombatLogParserException(std::string msg,
+                                                   std::source_location loc)
+    : message{std::move(msg)}, place{std::move(loc)}
 {
-
 }
 
 const char *CombatLogParserException::what() const noexcept

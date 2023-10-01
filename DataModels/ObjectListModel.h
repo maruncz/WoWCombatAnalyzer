@@ -5,7 +5,6 @@
 #include <QList>
 #include <utility>
 
-
 class ObjectListModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -16,15 +15,12 @@ public:
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex &index,
+                  int role = Qt::DisplayRole) const override;
 
     void setList(const QStringList *newList);
 
 private:
-
-
-
-
     const QStringList *list{nullptr};
 };
 

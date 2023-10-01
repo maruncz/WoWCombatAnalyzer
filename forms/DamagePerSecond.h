@@ -1,20 +1,20 @@
 #ifndef DAMAGEPERSECOND_H
 #define DAMAGEPERSECOND_H
 
-#include <QWidget>
-#include <QLineSeries>
-#include <QChartView>
-#include <QValueAxis>
-#include <QList>
-#include <utility>
 #include "../DataModels/ObjectListModel.h"
+#include <QChartView>
+#include <QLineSeries>
+#include <QList>
+#include <QValueAxis>
+#include <QWidget>
+#include <utility>
 
-namespace Ui {
+namespace Ui
+{
 class DamagePerSecond;
 }
 
 class CombatLog;
-
 
 class DamagePerSecond : public QWidget
 {
@@ -22,7 +22,7 @@ class DamagePerSecond : public QWidget
 
 public:
     explicit DamagePerSecond(QWidget *parent = nullptr);
-    ~DamagePerSecond();
+    ~DamagePerSecond() override;
 
     void setLog(CombatLog *newLog);
 
@@ -34,7 +34,6 @@ private slots:
     void on_pushRefresh_clicked();
 
 private:
-
     void adjustXRange(qreal min, qreal max);
     void adjustYRange(qreal min, qreal max);
 
@@ -45,7 +44,6 @@ private:
 
     QStringList sourceNamesList;
     QStringList targetNamesList;
-
 
     CombatLog *originalLog;
     QChart chart;

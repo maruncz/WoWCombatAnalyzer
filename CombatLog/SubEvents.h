@@ -1,11 +1,10 @@
 #ifndef SUBEVENTS_H
 #define SUBEVENTS_H
 
-#include <cstdint>
-#include <QString>
 #include "defs.h"
+#include <QString>
+#include <cstdint>
 #include <variant>
-
 
 struct UnitFlags
 {
@@ -56,16 +55,10 @@ struct UnitFlags
         static constexpr uint32_t mask{0xFFFF0000};
     };
 
-
     [[nodiscard]] static UnitFlags fromNum(uint32_t n);
 
     uint32_t value{0};
-
 };
-
-
-
-
 
 struct Object
 {
@@ -77,14 +70,13 @@ struct Object
     RaidFlags raidFlags;
 
 private:
-
 };
 
 struct Spell
 {
     Spell(QStringList list);
-    uint32_t id;
     QString name;
+    uint32_t id;
     uint8_t school;
 };
 
@@ -95,19 +87,14 @@ struct Item
     QString name;
 };
 
-
-
 namespace detail
 {
 
-
-
-
-
-
 namespace prefix
 {
-struct Swing{};
+struct Swing
+{
+};
 
 struct Range
 {
@@ -115,7 +102,7 @@ struct Range
     Spell spell;
 };
 
-using Spell = Range;
+using Spell         = Range;
 using SpellPeriodic = Range;
 using SpellBuilding = Range;
 
@@ -124,7 +111,7 @@ struct Environmental
     EnvironmentalType type;
 };
 
-}
+} // namespace prefix
 
 namespace suffix
 {
@@ -141,16 +128,16 @@ struct Damage
     bool critical;
     bool glancing;
     bool crushing;
-    //bool isOffHand;
+    // bool isOffHand;
 };
 
 struct Missed
 {
     Missed(QStringList list);
     MissType type;
-    //bool isOffHand;
+    // bool isOffHand;
     uint32_t amountMissed{0};
-    //bool critical;
+    // bool critical;
 };
 
 struct Heal
@@ -170,15 +157,17 @@ struct HealAbsorbed
     uint32_t totalAmount;
 };
 
-struct Absorbed{};
+struct Absorbed
+{
+};
 
 struct Energize
 {
     Energize(QStringList list);
     uint32_t amount;
-    //uint32_t overEnergize;
+    // uint32_t overEnergize;
     PowerType type;
-    //uint32_t maxPower;
+    // uint32_t maxPower;
 };
 
 struct Drain
@@ -187,7 +176,7 @@ struct Drain
     uint32_t amount;
     PowerType type;
     uint32_t extraAmount;
-    //uint32_t maxPower;
+    // uint32_t maxPower;
 };
 
 using Leech = Drain;
@@ -206,7 +195,7 @@ struct Dispell
 };
 
 using DispellFailed = Interrupt;
-using Stolen = Dispell;
+using Stolen        = Dispell;
 
 struct ExtraAttacks
 {
@@ -217,7 +206,7 @@ struct AuraApplied
 {
     AuraApplied(QStringList list);
     AuraType type;
-    //int amount;
+    // int amount;
 };
 
 using AuraRemoved = AuraApplied;
@@ -246,7 +235,7 @@ struct AuraBrokenSpell
     AuraType type;
 };
 
-using CastStart = Absorbed;
+using CastStart  = Absorbed;
 using CastSucces = Absorbed;
 struct CastFailed
 {
@@ -254,112 +243,141 @@ struct CastFailed
     QString type;
 };
 
-using Instakill = Absorbed;
-using DurabilityDamage = Absorbed;
+using Instakill           = Absorbed;
+using DurabilityDamage    = Absorbed;
 using DurabilityDamageAll = Absorbed;
-using Create = Absorbed;
-using Summon = Absorbed;
-using Resurrect = Absorbed;
-using Instakill = Absorbed;
+using Create              = Absorbed;
+using Summon              = Absorbed;
+using Resurrect           = Absorbed;
+using Instakill           = Absorbed;
 
+} // namespace suffix
 
-}
+} // namespace detail
 
-
-
-
-
-
-}
-
-
-
-
-struct SpellCastSucces : public detail::prefix::Spell, public detail::suffix::CastSucces
+struct SpellCastSucces : public detail::prefix::Spell,
+                         public detail::suffix::CastSucces
 {
     SpellCastSucces(QStringList list) : detail::prefix::Spell{list} {}
 };
 
 struct SpellDamage : public detail::prefix::Spell, public detail::suffix::Damage
 {
-    SpellDamage(QStringList list) : detail::prefix::Spell{list.mid(0,3)} , detail::suffix::Damage{list.mid(3)}
-    {}
+    SpellDamage(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::Damage{list.mid(3)}
+    {
+    }
 };
 
-struct SpellPeriodicDamage : public detail::prefix::SpellPeriodic, public detail::suffix::Damage
+struct SpellPeriodicDamage : public detail::prefix::SpellPeriodic,
+                             public detail::suffix::Damage
 {
-    SpellPeriodicDamage(QStringList list) : detail::prefix::SpellPeriodic{list.mid(0,3)} , detail::suffix::Damage{list.mid(3)}
-    {}
+    SpellPeriodicDamage(QStringList list)
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
+          detail::suffix::Damage{list.mid(3)}
+    {
+    }
 };
 
-struct SpellAuraApplied : public detail::prefix::Spell , public detail::suffix::AuraApplied
+struct SpellAuraApplied : public detail::prefix::Spell,
+                          public detail::suffix::AuraApplied
 {
-    SpellAuraApplied(QStringList list) : detail::prefix::Spell{list.mid(0,3)} , detail::suffix::AuraApplied{list.mid(3)}
-    {}
+    SpellAuraApplied(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::AuraApplied{list.mid(3)}
+    {
+    }
 };
 
-struct SpellAuraRemoved : public detail::prefix::Spell , public detail::suffix::AuraRemoved
+struct SpellAuraRemoved : public detail::prefix::Spell,
+                          public detail::suffix::AuraRemoved
 {
-    SpellAuraRemoved(QStringList list) : detail::prefix::Spell{list.mid(0,3)} , detail::suffix::AuraRemoved{list.mid(3)}
-    {}
+    SpellAuraRemoved(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::AuraRemoved{list.mid(3)}
+    {
+    }
 };
 
-struct SpellAuraRefresh : public detail::prefix::Spell , public detail::suffix::AuraRefresh
+struct SpellAuraRefresh : public detail::prefix::Spell,
+                          public detail::suffix::AuraRefresh
 {
-    SpellAuraRefresh(QStringList list) : detail::prefix::Spell{list.mid(0,3)} , detail::suffix::AuraRefresh{list.mid(3)}
-    {}
+    SpellAuraRefresh(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::AuraRefresh{list.mid(3)}
+    {
+    }
 };
 
-struct SpellEnergize : public detail::prefix::Spell, public detail::suffix::Energize
+struct SpellEnergize : public detail::prefix::Spell,
+                       public detail::suffix::Energize
 {
-    SpellEnergize(QStringList list) : detail::prefix::Spell{list.mid(0,3)} , detail::suffix::Energize{list.mid(3)}
-    {}
+    SpellEnergize(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::Energize{list.mid(3)}
+    {
+    }
 };
 
 struct SwingDamage : public detail::prefix::Swing, public detail::suffix::Damage
 {
-    SwingDamage(QStringList list) : detail::prefix::Swing{} , detail::suffix::Damage{list}
-    {}
-};
-
-struct SpellPeriodicHeal : public detail::prefix::SpellPeriodic, public detail::suffix::Heal
-{
-    SpellPeriodicHeal(QStringList list) : detail::prefix::SpellPeriodic{list.mid(0,3)} , detail::suffix::Heal{list.mid(3)}
-    {}
-};
-
-struct SpellAuraAppliedDose : public detail::prefix::Spell , public detail::suffix::AuraAppliedDose
-{
-    SpellAuraAppliedDose(QStringList list) : detail::prefix::Spell{list.mid(0,3)} , detail::suffix::AuraAppliedDose{list.mid(3)}
-    {}
-};
-
-struct SpellCastStart : public detail::prefix::Spell, public detail::suffix::CastStart
-{
-    SpellCastStart(QStringList list) : detail::prefix::Spell{list}
+    SwingDamage(QStringList list)
+        : detail::prefix::Swing{}, detail::suffix::Damage{list}
     {
-
     }
 };
 
-
-struct SpellPeriodicEnergize : public detail::prefix::SpellPeriodic, public detail::suffix::Energize
+struct SpellPeriodicHeal : public detail::prefix::SpellPeriodic,
+                           public detail::suffix::Heal
 {
-    SpellPeriodicEnergize(QStringList list) : detail::prefix::SpellPeriodic{list.mid(0,3)} , detail::suffix::Energize{list.mid(3)}
-    {}
+    SpellPeriodicHeal(QStringList list)
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
+          detail::suffix::Heal{list.mid(3)}
+    {
+    }
+};
+
+struct SpellAuraAppliedDose : public detail::prefix::Spell,
+                              public detail::suffix::AuraAppliedDose
+{
+    SpellAuraAppliedDose(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::AuraAppliedDose{list.mid(3)}
+    {
+    }
+};
+
+struct SpellCastStart : public detail::prefix::Spell,
+                        public detail::suffix::CastStart
+{
+    SpellCastStart(QStringList list) : detail::prefix::Spell{list} {}
+};
+
+struct SpellPeriodicEnergize : public detail::prefix::SpellPeriodic,
+                               public detail::suffix::Energize
+{
+    SpellPeriodicEnergize(QStringList list)
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
+          detail::suffix::Energize{list.mid(3)}
+    {
+    }
 };
 
 struct SpellHeal : public detail::prefix::Spell, public detail::suffix::Heal
 {
-    SpellHeal(QStringList list) : detail::prefix::Spell{list.mid(0,3)} , detail::suffix::Heal{list.mid(3)}
-    {}
+    SpellHeal(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::Heal{list.mid(3)}
+    {
+    }
 };
 
 struct SwingMissed : public detail::prefix::Swing, public detail::suffix::Missed
 {
-    SwingMissed(QStringList list) : detail::prefix::Swing{}, detail::suffix::Missed{list}
+    SwingMissed(QStringList list)
+        : detail::prefix::Swing{}, detail::suffix::Missed{list}
     {
-
     }
 };
 
@@ -368,13 +386,14 @@ struct PartyKill
     PartyKill(QStringList list);
 };
 
-struct SpellCastFailed : public detail::prefix::Spell, public detail::suffix::CastFailed
+struct SpellCastFailed : public detail::prefix::Spell,
+                         public detail::suffix::CastFailed
 {
-    SpellCastFailed(QStringList list) : detail::prefix::Spell{list.mid(0,3)}, detail::suffix::CastFailed{list.mid(3)}
+    SpellCastFailed(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::CastFailed{list.mid(3)}
     {
-
     }
-
 };
 
 struct EnchantApplied
@@ -386,76 +405,84 @@ struct EnchantApplied
 
 struct SpellMissed : public detail::prefix::Spell, public detail::suffix::Missed
 {
-    SpellMissed(QStringList list) : detail::prefix::Spell{list.mid(0,3)}, detail::suffix::Missed{list.mid(3)}
+    SpellMissed(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::Missed{list.mid(3)}
     {
-
     }
 };
 
-struct SpellInterrupt : public detail::prefix::Spell, public detail::suffix::Interrupt
+struct SpellInterrupt : public detail::prefix::Spell,
+                        public detail::suffix::Interrupt
 {
-    SpellInterrupt(QStringList list) : detail::prefix::Spell{list.mid(0,3)}, detail::suffix::Interrupt{list.mid(3)}
+    SpellInterrupt(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::Interrupt{list.mid(3)}
     {
-
     }
 };
 
-struct SpellPeriodicMissed : public detail::prefix::SpellPeriodic, public detail::suffix::Missed
+struct SpellPeriodicMissed : public detail::prefix::SpellPeriodic,
+                             public detail::suffix::Missed
 {
-    SpellPeriodicMissed(QStringList list) : detail::prefix::SpellPeriodic{list.mid(0,3)} , detail::suffix::Missed{list.mid(3)}
-    {}
+    SpellPeriodicMissed(QStringList list)
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
+          detail::suffix::Missed{list.mid(3)}
+    {
+    }
 };
 
-struct SpellDispel : public detail::prefix::Spell, public detail::suffix::Dispell
+struct SpellDispel : public detail::prefix::Spell,
+                     public detail::suffix::Dispell
 {
-    SpellDispel(QStringList list) : detail::prefix::Spell{list.mid(0,3)}, detail::suffix::Dispell{list.mid(3)}
+    SpellDispel(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::Dispell{list.mid(3)}
     {
-
     }
-
 };
 
 struct SpellSummon : public detail::prefix::Spell, public detail::suffix::Summon
 {
-    SpellSummon(QStringList list) : detail::prefix::Spell{list} , detail::suffix::Summon{}
+    SpellSummon(QStringList list)
+        : detail::prefix::Spell{list}, detail::suffix::Summon{}
     {
-
     }
 };
 
-struct SpellPeriodicLeech : public detail::prefix::SpellPeriodic, public detail::suffix::Leech
+struct SpellPeriodicLeech : public detail::prefix::SpellPeriodic,
+                            public detail::suffix::Leech
 {
-    SpellPeriodicLeech(QStringList list) : detail::prefix::SpellPeriodic{list.mid(0,3)} , detail::suffix::Leech{list.mid(3)}
+    SpellPeriodicLeech(QStringList list)
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
+          detail::suffix::Leech{list.mid(3)}
     {
-
     }
 };
 
-
-struct SpellResurrect : public detail::prefix::Spell, public detail::suffix::Resurrect
+struct SpellResurrect : public detail::prefix::Spell,
+                        public detail::suffix::Resurrect
 {
-    SpellResurrect(QStringList list) : detail::prefix::Spell{list} , detail::suffix::Resurrect{}
+    SpellResurrect(QStringList list)
+        : detail::prefix::Spell{list}, detail::suffix::Resurrect{}
     {
-
     }
 };
 
+using variant_t = std::variant<
+    std::monostate, SpellCastSucces, SpellDamage, SpellPeriodicDamage,
+    SpellAuraApplied, SpellAuraRemoved, SpellAuraRefresh, SpellEnergize,
+    SwingDamage, SpellPeriodicHeal, SpellAuraAppliedDose, SpellCastStart,
+    SpellPeriodicEnergize, SpellHeal, SwingMissed, PartyKill, SpellCastFailed,
+    EnchantApplied, SpellMissed, SpellInterrupt, SpellPeriodicMissed,
+    SpellDispel, SpellSummon, SpellPeriodicLeech, SpellResurrect>;
 
-
-using variant_t = std::variant<std::monostate,SpellCastSucces,SpellDamage,SpellPeriodicDamage,
-                               SpellAuraApplied,SpellAuraRemoved, SpellAuraRefresh,SpellEnergize,
-                               SwingDamage,SpellPeriodicHeal,SpellAuraAppliedDose,SpellCastStart,
-                               SpellPeriodicEnergize, SpellHeal, SwingMissed, PartyKill,SpellCastFailed,
-                               EnchantApplied,SpellMissed, SpellInterrupt,SpellPeriodicMissed,
-                               SpellDispel,SpellSummon,SpellPeriodicLeech, SpellResurrect>;
-
-using DamageShield = SpellDamage;
-using UnitDied = PartyKill;
+using DamageShield       = SpellDamage;
+using UnitDied           = PartyKill;
 using DamageShieldMissed = SpellMissed;
-using SpellCreate = SpellSummon;
-using RangeDamage = SpellDamage;
-using SpellInstakill = SpellSummon;
-using EnchantRemoved = EnchantApplied;
-
+using SpellCreate        = SpellSummon;
+using RangeDamage        = SpellDamage;
+using SpellInstakill     = SpellSummon;
+using EnchantRemoved     = EnchantApplied;
 
 #endif // SUBEVENTS_H

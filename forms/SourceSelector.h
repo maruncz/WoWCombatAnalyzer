@@ -3,7 +3,8 @@
 
 #include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class SourceSelector;
 }
 
@@ -13,12 +14,10 @@ class SourceSelector : public QWidget
 
 public:
     explicit SourceSelector(QWidget *parent = nullptr);
-    ~SourceSelector();
+    ~SourceSelector() override;
 
 private:
     Ui::SourceSelector *ui;
-
-
 };
 
 #endif // SOURCESELECTOR_H

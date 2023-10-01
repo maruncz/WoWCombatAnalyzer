@@ -6,7 +6,7 @@
 
 enum class SubEvent
 {
-SPELL_CAST_SUCCESS,
+    SPELL_CAST_SUCCESS,
     SPELL_AURA_APPLIED,
     SPELL_AURA_APPLIED_DOSE,
     SPELL_AURA_REMOVED,
@@ -71,90 +71,86 @@ enum UnitFlags
 
 enum RaidFlags
 {
-    COMBATLOG_OBJECT_RAIDTARGET1   =     0x00000001,
-    COMBATLOG_OBJECT_RAIDTARGET2    =    0x00000002,
-    COMBATLOG_OBJECT_RAIDTARGET3   =     0x00000004,
-    COMBATLOG_OBJECT_RAIDTARGET4   =     0x00000008,
-    COMBATLOG_OBJECT_RAIDTARGET5   =     0x00000010,
-    COMBATLOG_OBJECT_RAIDTARGET6   =     0x00000020,
-    COMBATLOG_OBJECT_RAIDTARGET7   =     0x00000040,
-    COMBATLOG_OBJECT_RAIDTARGET8   =     0x00000080,
-    COMBATLOG_OBJECT_RAIDTARGET_MASK=	0x000000FF
+    COMBATLOG_OBJECT_RAIDTARGET1     = 0x00000001,
+    COMBATLOG_OBJECT_RAIDTARGET2     = 0x00000002,
+    COMBATLOG_OBJECT_RAIDTARGET3     = 0x00000004,
+    COMBATLOG_OBJECT_RAIDTARGET4     = 0x00000008,
+    COMBATLOG_OBJECT_RAIDTARGET5     = 0x00000010,
+    COMBATLOG_OBJECT_RAIDTARGET6     = 0x00000020,
+    COMBATLOG_OBJECT_RAIDTARGET7     = 0x00000040,
+    COMBATLOG_OBJECT_RAIDTARGET8     = 0x00000080,
+    COMBATLOG_OBJECT_RAIDTARGET_MASK = 0x000000FF
 };
-
 
 enum class SpellSchool
 {
     Physical = 1,
-    Holy    =2,
-    Fire   =4,
-    Nature =8,
-    Frost =16,
-    Shadow =32  ,
-    Arcane  =64 ,
+    Holy     = 2,
+    Fire     = 4,
+    Nature   = 8,
+    Frost    = 16,
+    Shadow   = 32,
+    Arcane   = 64,
 
-    Holystrike	 = Holy | Physical,
-    Flamestrike	= Fire | Physical,
-    Radiant        = Fire | Holy ,
-    Holyfire = Radiant,
-    Stormstrike	 = Nature | Physical,
-    Holystorm	= Nature | Holy,
-    Volcanic	= Nature | Fire,
-    Froststrike	= Frost | Physical,
-    Holyfrost	= Frost | Holy,
-    Frostfire	= Frost | Fire,
-    Froststorm	= Frost | Nature,
-    Shadowstrike	= Shadow | Physical,
-    Twilight        = Shadow | Holy,
-    Shadowlight        = Shadow | Holy,
-    Shadowflame	= Shadow | Fire,
-    Plague          = Shadow | Nature,
-    Shadowstorm          = Shadow | Nature,
-    Shadowfrost	= Shadow | Frost,
-    Spellstrike	= Arcane | Physical,
-    Divine          = Arcane | Holy,
-    Spellfire	= Arcane | Fire,
-    Astral          = Arcane | Nature,
-    Spellstorm          = Arcane | Nature,
-    Spellfrost	= Arcane | Frost,
-    Spellshadow	= Arcane |Shadow,
-
+    Holystrike   = Holy | Physical,
+    Flamestrike  = Fire | Physical,
+    Radiant      = Fire | Holy,
+    Holyfire     = Radiant,
+    Stormstrike  = Nature | Physical,
+    Holystorm    = Nature | Holy,
+    Volcanic     = Nature | Fire,
+    Froststrike  = Frost | Physical,
+    Holyfrost    = Frost | Holy,
+    Frostfire    = Frost | Fire,
+    Froststorm   = Frost | Nature,
+    Shadowstrike = Shadow | Physical,
+    Twilight     = Shadow | Holy,
+    Shadowlight  = Shadow | Holy,
+    Shadowflame  = Shadow | Fire,
+    Plague       = Shadow | Nature,
+    Shadowstorm  = Shadow | Nature,
+    Shadowfrost  = Shadow | Frost,
+    Spellstrike  = Arcane | Physical,
+    Divine       = Arcane | Holy,
+    Spellfire    = Arcane | Fire,
+    Astral       = Arcane | Nature,
+    Spellstorm   = Arcane | Nature,
+    Spellfrost   = Arcane | Frost,
+    Spellshadow  = Arcane | Shadow,
 
 };
 
-
-
 enum class PowerType
 {
-    HealthCost	= -2,
-    None	= -1,
-    Mana         =0           ,
-    Rage             =1       ,
-    Focus            =2       ,
-    Energy            =3      ,
-    ComboPoints       =4      ,
-    Runes             =5      ,
-    RunicPower        =6      ,
-    SoulShards        =7      ,
-    LunarPower         =8     ,
-    HolyPower          =9     ,
-    Alternate          =10     ,
-    Maelstrom          =11     ,
-    Chi                =12     ,
-    Insanity           =13     ,
-    Obsolete           =14     ,
-    Obsolete2          =15     ,
-    ArcaneCharges      =16     ,
-    Fury               =17     ,
-    Pain               =18     ,
-    Essence            =19     ,
-    RuneBlood          =20     ,
-    RuneFrost          =21     ,
-    RuneUnholy         =22     ,
-    AlternateQuest     =23     ,
-    AlternateEncounter =24	,
-    AlternateMount      =25    ,
-    NumPowerTypes	=26
+    HealthCost         = -2,
+    None               = -1,
+    Mana               = 0,
+    Rage               = 1,
+    Focus              = 2,
+    Energy             = 3,
+    ComboPoints        = 4,
+    Runes              = 5,
+    RunicPower         = 6,
+    SoulShards         = 7,
+    LunarPower         = 8,
+    HolyPower          = 9,
+    Alternate          = 10,
+    Maelstrom          = 11,
+    Chi                = 12,
+    Insanity           = 13,
+    Obsolete           = 14,
+    Obsolete2          = 15,
+    ArcaneCharges      = 16,
+    Fury               = 17,
+    Pain               = 18,
+    Essence            = 19,
+    RuneBlood          = 20,
+    RuneFrost          = 21,
+    RuneUnholy         = 22,
+    AlternateQuest     = 23,
+    AlternateEncounter = 24,
+    AlternateMount     = 25,
+    NumPowerTypes      = 26
 };
 
 enum class MissType
@@ -186,6 +182,5 @@ enum class EnvironmentalType
     LAVA,
     SLIME
 };
-
 
 #endif // DEFS_H

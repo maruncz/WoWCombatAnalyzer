@@ -6,9 +6,10 @@ HealDataModel::HealDataModel(CombatLog *log, QObject *parent)
 {
 }
 
-QVariant HealDataModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant HealDataModel::headerData(int section, Qt::Orientation orientation,
+                                   int role) const
 {
-    if((role == Qt::DisplayRole) && (orientation == Qt::Horizontal))
+    if ((role == Qt::DisplayRole) && (orientation == Qt::Horizontal))
     {
         return QString::fromStdString(std::string{header.at(section)});
     }
@@ -37,54 +38,61 @@ QVariant HealDataModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if(role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole)
     {
-        const auto& line = combatlog->getLines().at(index.row());
-        switch(index.column())
+        const auto &line = combatlog->getLines().at(index.row());
+        switch (index.column())
         {
-        case 0:
-        {
-            return line.getTimestamp();
-        }
-        case 1:
-        {
-            return line.getSourceObject().name;
-        }
-        case 2:
-        {
-            return line.getDestObject().name;
-        }
-        case 3:
-        {
-            return std::visit([](auto &&arg) -> QString {
-                using T = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_base_of_v<detail::prefix::Spell,T>)
-                {
-                    return arg.spell.name;
-                }
-                else
-                {
-                    throw std::runtime_error("unhandled case");
-                }
-            },line.getSubEventValue());
-        }
-        case 4:
-        {
-            return std::visit([](auto &&arg) -> uint32_t {
-                using T = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_base_of_v<detail::suffix::Heal,T>)
-                {
-                    return arg.amount;
-                }
-                else
-                {
-                    throw std::runtime_error("unhandled case");
-                }
-            },line.getSubEventValue());
-        }
+            case 0:
+            {
+                return line.getTimestamp();
+            }
+            case 1:
+            {
+                return line.getSourceObject().name;
+            }
+            case 2:
+            {
+                return line.getDestObject().name;
+            }
+            case 3:
+            {
+                return std::visit(
+                    [](auto &&arg) -> QString
+                    {
+                        using T = std::decay_t<decltype(arg)>;
+                        if constexpr (std::is_base_of_v<detail::prefix::Spell,
+                                                        T>)
+                        {
+                            return arg.spell.name;
+                        }
+                        else
+                        {
+                            throw std::runtime_error("unhandled case");
+                        }
+                    },
+                    line.getSubEventValue());
+            }
+            case 4:
+            {
+                return std::visit(
+                    [](auto &&arg) -> uint32_t
+                    {
+                        using T = std::decay_t<decltype(arg)>;
+                        if constexpr (std::is_base_of_v<detail::suffix::Heal,
+                                                        T>)
+                        {
+                            return arg.amount;
+                        }
+                        else
+                        {
+                            throw std::runtime_error("unhandled case");
+                        }
+                    },
+                    line.getSubEventValue());
+            }
         }
     }
-
 
     return QVariant();
 }
