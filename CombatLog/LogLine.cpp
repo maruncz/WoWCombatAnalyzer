@@ -166,6 +166,14 @@ SubEvent LogLine::subeventTypeFromString(QString s)
     {
         return SubEvent::SPELL_INSTAKILL;
     }
+    else if(s == "SPELL_RESURRECT")
+    {
+        return SubEvent::SPELL_RESURRECT;
+    }
+    else if(s == "ENCHANT_REMOVED")
+    {
+        return SubEvent::ENCHANT_REMOVED;
+    }
 
 
     throw CombatLogParserException(QString("unknown subEvent: %1").arg(s).toStdString());
@@ -232,6 +240,10 @@ variant_t LogLine::subeventValueFromString(SubEvent type, QStringList list)
         return {RangeDamage{list}};
     case SubEvent::SPELL_INSTAKILL:
         return {SpellInstakill{list}};
+    case SubEvent::SPELL_RESURRECT:
+        return {SpellResurrect{list}};
+    case SubEvent::ENCHANT_REMOVED:
+        return {EnchantRemoved{list}};
     }
     throw CombatLogParserException(QString("unhandled subevent: %1").arg(list.at(0)).toStdString());
 }

@@ -432,6 +432,14 @@ struct SpellPeriodicLeech : public detail::prefix::SpellPeriodic, public detail:
 };
 
 
+struct SpellResurrect : public detail::prefix::Spell, public detail::suffix::Resurrect
+{
+    SpellResurrect(QStringList list) : detail::prefix::Spell{list} , detail::suffix::Resurrect{}
+    {
+
+    }
+};
+
 
 
 using variant_t = std::variant<std::monostate,SpellCastSucces,SpellDamage,SpellPeriodicDamage,
@@ -439,7 +447,7 @@ using variant_t = std::variant<std::monostate,SpellCastSucces,SpellDamage,SpellP
                                SwingDamage,SpellPeriodicHeal,SpellAuraAppliedDose,SpellCastStart,
                                SpellPeriodicEnergize, SpellHeal, SwingMissed, PartyKill,SpellCastFailed,
                                EnchantApplied,SpellMissed, SpellInterrupt,SpellPeriodicMissed,
-                               SpellDispel,SpellSummon,SpellPeriodicLeech>;
+                               SpellDispel,SpellSummon,SpellPeriodicLeech, SpellResurrect>;
 
 using DamageShield = SpellDamage;
 using UnitDied = PartyKill;
@@ -447,5 +455,7 @@ using DamageShieldMissed = SpellMissed;
 using SpellCreate = SpellSummon;
 using RangeDamage = SpellDamage;
 using SpellInstakill = SpellSummon;
+using EnchantRemoved = EnchantApplied;
+
 
 #endif // SUBEVENTS_H
