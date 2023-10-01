@@ -1,6 +1,6 @@
 #include "../filters/SubSampler.h"
 #include <algorithm>
-#include <boost/ut.hpp>
+#include <gtest/gtest.h>
 #include <span>
 #include <utility>
 #include <vector>
@@ -115,65 +115,59 @@ param p12{{{65618, 3361},
 
 } // namespace
 
-void range_compare(std::span<const std::pair<qreal, qreal>> l,
-                   std::span<const std::pair<qreal, qreal>> r)
+class SubSamplerTest : public testing::TestWithParam<param>
 {
-    boost::ut::expect(l.size() == r.size())
-        << "range size mismatch, l: " << l.size()
-        << ", r: " << r.size(); // << boost::ut::fatal;
-    auto li = l.begin();
-    auto ri = r.begin();
-    for (; li != l.end(); ++li, ++ri)
-    {
-        boost::ut::expect(std::abs(li->first - ri->first) <= (li->first / 1000))
-            << "mismatched timestamps l: " << li->first
-            << ", r: " << ri->first; // << boost::ut::fatal;
-        boost::ut::expect(std::abs(li->second - ri->second) <=
-                          (li->second / 1000))
-            << "mismatched values l: " << li->second
-            << ", r: " << ri->second; // << boost::ut::fatal;
-    }
-}
 
-std::vector<std::pair<qreal, qreal>>
-test(std::span<const std::pair<qreal, qreal>> data, qreal period, qreal start)
-{
-    std::vector<std::pair<qreal, qreal>> ret;
-    SubSampler sampler{period, start};
-
-    for (const auto &[x, y] : data)
+protected:
+    std::vector<std::pair<qreal, qreal>>
+    process(std::span<const std::pair<qreal, qreal>> data, qreal period,
+            qreal start)
     {
-        auto samples = sampler.addValue(x, y);
-        if (samples.has_value())
+        std::vector<std::pair<qreal, qreal>> ret;
+        SubSampler sampler{period, start};
+
+        for (const auto &[x, y] : data)
         {
-            for (const auto &sample : samples.value())
+            auto samples = sampler.addValue(x, y);
+            if (samples.has_value())
             {
-                ret.emplace_back(sample);
+                for (const auto &sample : samples.value())
+                {
+                    ret.emplace_back(sample);
+                }
             }
         }
+
+        ret.emplace_back(sampler.finalize());
+
+        return ret;
     }
 
-    ret.emplace_back(sampler.finalize());
+    void range_compare(std::span<const std::pair<qreal, qreal>> l,
+                       std::span<const std::pair<qreal, qreal>> r)
+    {
+        EXPECT_EQ(l.size(), r.size())
+            << "range size mismatch, l: " << l.size() << ", r: " << r.size();
+        auto li = l.begin();
+        auto ri = r.begin();
+        for (; li != l.end(); ++li, ++ri)
+        {
+            EXPECT_NEAR(li->first, ri->first, li->first / 1000)
+                << "mismatched timestamps l: " << li->first
+                << ", r: " << ri->first;
+            EXPECT_NEAR(li->second, ri->second, li->second / 1000)
+                << "mismatched values l: " << li->second
+                << ", r: " << ri->second;
+        }
+    }
+};
 
-    return ret;
-}
-
-void test_check(const param &p)
+TEST_P(SubSamplerTest, subsample)
 {
-    auto ret = test(p.in, p.period, p.start);
+    const auto &p = GetParam();
+    auto ret      = process(p.in, p.period, p.start);
     range_compare(p.out, ret);
 }
 
-int main()
-{
-    test_check(p1);
-    test_check(p2);
-    test_check(p3);
-    test_check(p4);
-    test_check(p5);
-    test_check(p10);
-    test_check(p11);
-    test_check(p12);
-
-    return 0;
-}
+INSTANTIATE_TEST_SUITE_P(SubSampler, SubSamplerTest,
+                         testing::Values(p1, p2, p3, p4, p5, p10, p11, p12));

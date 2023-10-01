@@ -90,5 +90,6 @@ install(TARGETS WoWCombatAnalyzer
 qt_finalize_executable(WoWCombatAnalyzer)
 
 if("${BUILD_TESTS}")
+    enable_testing()
     add_subdirectory(tests)
 endif()

@@ -2,16 +2,19 @@ cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 include(FetchContent)
 
+
+
+
 FetchContent_Declare(
-  ut
-  GIT_REPOSITORY https://github.com/boost-ext/ut
-  GIT_TAG        cd12498
+  gtest
+  GIT_REPOSITORY https://github.com/google/googletest
+  GIT_TAG        f8d7d77
 )
 
-FetchContent_MakeAvailable(ut)
+FetchContent_MakeAvailable(gtest)
 
 
 
 add_executable(SubSamplerTest SubSamplerTest.cpp)
-target_link_libraries(SubSamplerTest PRIVATE Boost::ut filters)
-add_test(SubSamplerTest SubSamplerTest)
+target_link_libraries(SubSamplerTest PRIVATE GTest::gtest_main filters)
+add_test(NAME SubSamplerTest COMMAND SubSamplerTest)
