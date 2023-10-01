@@ -451,3 +451,60 @@ bool SpellPeriodicMissed::operator==(const SpellPeriodicMissed &o) const
     return detail::prefix::SpellPeriodic::operator==(o) &&
            detail::suffix::Missed::operator==(o);
 }
+
+detail::suffix::ExtraAttacks::ExtraAttacks(QStringList list)
+{
+    if (list.size() != 1)
+    {
+        throw CombatLogParserException(
+            QString("wrong list size, expected 3, got %1 : %2")
+                .arg(list.size())
+                .arg(list.join(','))
+                .toStdString());
+    }
+
+    amount = LineParser::parseDamageAmount(list.at(0));
+}
+
+detail::prefix::Environmental::Environmental(QStringList list)
+{
+    if (list.size() != 1)
+    {
+        throw CombatLogParserException(
+            QString("wrong list size, expected 3, got %1 : %2")
+                .arg(list.size())
+                .arg(list.join(','))
+                .toStdString());
+    }
+
+    type = [](QString s) -> EnvironmentalType
+    {
+        if (s == "DROWNING")
+        {
+            return EnvironmentalType::DROWNING;
+        }
+        else if (s == "FALLING")
+        {
+            return EnvironmentalType::FALLING;
+        }
+        else if (s == "FATIGUE")
+        {
+            return EnvironmentalType::FATIGUE;
+        }
+        else if (s == "FIRE")
+        {
+            return EnvironmentalType::FIRE;
+        }
+        else if (s == "LAVA")
+        {
+            return EnvironmentalType::LAVA;
+        }
+        else if (s == "SLIME")
+        {
+            return EnvironmentalType::SLIME;
+        }
+
+        throw CombatLogParserException(
+            QString("unexpected EnvironmentalType: %1").arg(s).toStdString());
+    }(list.at(0));
+}

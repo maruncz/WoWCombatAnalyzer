@@ -204,6 +204,30 @@ SubEvent LogLine::subeventTypeFromString(QString s)
     {
         return SubEvent::ENCHANT_REMOVED;
     }
+    else if (s == "SPELL_EXTRA_ATTACKS")
+    {
+        return SubEvent::SPELL_EXTRA_ATTACKS;
+    }
+    else if (s == "DAMAGE_SPLIT")
+    {
+        return SubEvent::DAMAGE_SPLIT;
+    }
+    else if (s == "SPELL_STOLEN")
+    {
+        return SubEvent::SPELL_STOLEN;
+    }
+    else if (s == "ENVIRONMENTAL_DAMAGE")
+    {
+        return SubEvent::ENVIRONMENTAL_DAMAGE;
+    }
+    else if (s == "SPELL_AURA_REMOVED_DOSE")
+    {
+        return SubEvent::SPELL_AURA_REMOVED_DOSE;
+    }
+    else if (s == "RANGE_MISSED")
+    {
+        return SubEvent::RANGE_MISSED;
+    }
 
     throw CombatLogParserException(
         QString("unknown subEvent: %1").arg(s).toStdString());
@@ -248,6 +272,13 @@ variant_t LogLine::subeventValueFromString(SubEvent type, QStringList list)
         case SubEvent::SPELL_INSTAKILL: return {SpellInstakill{list}};
         case SubEvent::SPELL_RESURRECT: return {SpellResurrect{list}};
         case SubEvent::ENCHANT_REMOVED: return {EnchantRemoved{list}};
+        case SubEvent::SPELL_EXTRA_ATTACKS: return {SpellExtraAttacks{list}};
+        case SubEvent::DAMAGE_SPLIT: return {DamageSplit{list}};
+        case SubEvent::SPELL_STOLEN: return {SpellStolen{list}};
+        case SubEvent::ENVIRONMENTAL_DAMAGE: return {EnvironmentalDamage{list}};
+        case SubEvent::SPELL_AURA_REMOVED_DOSE:
+            return {SpellAuraRemovedDose{list}};
+        case SubEvent::RANGE_MISSED: return {RangeMissed{list}};
     }
     throw CombatLogParserException(
         QString("unhandled subevent: %1").arg(list.at(0)).toStdString());

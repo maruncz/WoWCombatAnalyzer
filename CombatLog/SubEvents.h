@@ -121,6 +121,7 @@ using SpellBuilding = Range;
 
 struct Environmental
 {
+    Environmental(QStringList list);
     EnvironmentalType type;
 };
 
@@ -218,6 +219,7 @@ using Stolen        = Dispell;
 
 struct ExtraAttacks
 {
+    ExtraAttacks(QStringList list);
     uint32_t amount;
 };
 
@@ -514,13 +516,44 @@ struct SpellResurrect : public detail::prefix::Spell,
     }
 };
 
+struct SpellExtraAttacks : public detail::prefix::Spell,
+                           public detail::suffix::ExtraAttacks
+{
+    SpellExtraAttacks(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::ExtraAttacks{
+                                                     list.mid(3)}
+    {
+    }
+};
+
+struct EnvironmentalDamage : public detail::prefix::Environmental,
+                             public detail::suffix::Damage
+{
+    EnvironmentalDamage(QStringList list)
+        : detail::prefix::Environmental{list.mid(0, 1)}, detail::suffix::Damage{
+                                                             list.mid(1)}
+    {
+    }
+};
+
+struct SpellAuraRemovedDose : public detail::prefix::Spell,
+                              public detail::suffix::AuraAppliedDose
+{
+    SpellAuraRemovedDose(QStringList list)
+        : detail::prefix::Spell{list.mid(0, 3)},
+          detail::suffix::AuraRemovedDose{list.mid(3)}
+    {
+    }
+};
+
 using variant_t = std::variant<
     std::monostate, SpellCastSucces, SpellDamage, SpellPeriodicDamage,
     SpellAuraApplied, SpellAuraRemoved, SpellAuraRefresh, SpellEnergize,
     SwingDamage, SpellPeriodicHeal, SpellAuraAppliedDose, SpellCastStart,
     SpellPeriodicEnergize, SpellHeal, SwingMissed, PartyKill, SpellCastFailed,
     EnchantApplied, SpellMissed, SpellInterrupt, SpellPeriodicMissed,
-    SpellDispel, SpellSummon, SpellPeriodicLeech, SpellResurrect>;
+    SpellDispel, SpellSummon, SpellPeriodicLeech, SpellResurrect,
+    SpellExtraAttacks, EnvironmentalDamage, SpellAuraRemovedDose>;
 
 using DamageShield       = SpellDamage;
 using UnitDied           = PartyKill;
@@ -529,5 +562,8 @@ using SpellCreate        = SpellSummon;
 using RangeDamage        = SpellDamage;
 using SpellInstakill     = SpellSummon;
 using EnchantRemoved     = EnchantApplied;
+using DamageSplit        = SpellDamage;
+using SpellStolen        = SpellDispel;
+using RangeMissed        = SpellMissed;
 
 #endif // SUBEVENTS_H
