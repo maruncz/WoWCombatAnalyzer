@@ -2,6 +2,13 @@
 #include "exceptions.h"
 #include <QFile>
 
+CombatLog::CombatLog(const QList<LogLine> &lines,
+                     const QStringList &sourceNames,
+                     const QStringList &targetNames)
+    : lines{lines}, sourceNames{sourceNames}, targetNames{targetNames}
+{
+}
+
 CombatLog CombatLog::fromFile(QString filename)
 {
     QFile file{filename};
@@ -66,6 +73,26 @@ void CombatLog::finalize()
 const QStringList &CombatLog::getTargetNames() const
 {
     return targetNames;
+}
+
+bool CombatLog::operator==(const CombatLog &o) const
+{
+    if (sourceNames != o.sourceNames)
+    {
+        return false;
+    }
+
+    if (targetNames != o.targetNames)
+    {
+        return false;
+    }
+
+    if (lines != o.lines)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 const QStringList &CombatLog::getSourceNames() const

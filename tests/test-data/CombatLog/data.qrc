@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/test-data">
+        <file>simple.txt</file>
+        <file>comma.txt</file>
+    </qresource>
+</RCC>

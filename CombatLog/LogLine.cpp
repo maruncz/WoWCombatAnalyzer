@@ -3,6 +3,14 @@
 #include "exceptions.h"
 #include <QDebug>
 
+LogLine::LogLine(const QDateTime &timestamp, const Object &sourceObject,
+                 const Object &destObject, SubEvent subeventType,
+                 const variant_t &subEventValue)
+    : timestamp{timestamp}, sourceObject{sourceObject}, destObject{destObject},
+      subeventType{subeventType}, subEventValue{subEventValue}
+{
+}
+
 LogLine LogLine::fromRawData(QString s)
 {
     auto line = parseTokens(s);
@@ -224,6 +232,36 @@ variant_t LogLine::subeventValueFromString(SubEvent type, QStringList list)
 variant_t LogLine::getSubEventValue() const
 {
     return subEventValue;
+}
+
+bool LogLine::operator==(const LogLine &o) const
+{
+    if (timestamp != o.timestamp)
+    {
+        return false;
+    }
+
+    if (sourceObject != o.sourceObject)
+    {
+        return false;
+    }
+
+    if (destObject != o.destObject)
+    {
+        return false;
+    }
+
+    if (subeventType != o.subeventType)
+    {
+        return false;
+    }
+
+    if (subEventValue != subEventValue)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 SubEvent LogLine::getSubeventType() const

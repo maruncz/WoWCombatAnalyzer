@@ -1,0 +1,1 @@
+9/30 20:23:30.678  ENCHANT_REMOVED,0x0000000000000000,nil,0x80000000,0x00000000000291EC,"test",0x514,"Grand Firestone",50427,"Bloodsurge, Kel'Thuzad's Blade of Agony"

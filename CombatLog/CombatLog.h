@@ -9,6 +9,10 @@
 class CombatLog
 {
 public:
+    CombatLog() = default;
+    CombatLog(const QList<LogLine> &lines, const QStringList &sourceNames,
+              const QStringList &targetNames);
+
     [[nodiscard]] static CombatLog fromFile(QString filename);
 
     [[nodiscard]] const QList<LogLine> &getLines() const;
@@ -30,6 +34,8 @@ public:
         ret.finalize();
         return ret;
     }
+
+    [[nodiscard]] bool operator==(const CombatLog &o) const;
 
 private:
     void append(LogLine line);

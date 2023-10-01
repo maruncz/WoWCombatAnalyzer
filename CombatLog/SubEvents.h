@@ -57,6 +57,8 @@ struct UnitFlags
 
     [[nodiscard]] static UnitFlags fromNum(uint32_t n);
 
+    [[nodiscard]] bool operator==(const UnitFlags &o) const;
+
     uint32_t value{0};
 };
 
@@ -64,25 +66,33 @@ struct Object
 {
     [[nodiscard]] static Object fromString(QStringList list);
 
+    [[nodiscard]] bool operator==(const Object &o) const;
+
     uint64_t guid;
     QString name;
     UnitFlags flags;
-    RaidFlags raidFlags;
-
-private:
+    // RaidFlags raidFlags;
 };
 
-struct Spell
+struct SpellInfo
 {
-    Spell(QStringList list);
+    SpellInfo(QStringList list);
+    SpellInfo(const QString &name, uint32_t id, uint8_t school);
+
+    [[nodiscard]] bool operator==(const SpellInfo &o) const;
+
     QString name;
     uint32_t id;
-    uint8_t school;
+    uint8_t school; // same as SpellSchool?
 };
 
 struct Item
 {
     Item(QStringList list);
+    Item(uint32_t id, const QString &name);
+
+    [[nodiscard]] bool operator==(const Item &o) const;
+
     uint32_t id;
     QString name;
 };
@@ -99,7 +109,10 @@ struct Swing
 struct Range
 {
     Range(QStringList list) : spell{list} {}
-    Spell spell;
+    Range(const SpellInfo &spell);
+    SpellInfo spell;
+
+    [[nodiscard]] bool operator==(const Range &o) const;
 };
 
 using Spell         = Range;
@@ -119,9 +132,12 @@ namespace suffix
 struct Damage
 {
     Damage(QStringList list);
+
+    [[nodiscard]] bool operator==(const Damage &o) const;
+
     uint32_t amount;
     uint32_t overkill;
-    SpellSchool spelschool;
+    SpellSchool spellschool; // not initialized
     uint32_t resisted;
     uint32_t blocked;
     uint32_t absorbed;
@@ -134,6 +150,9 @@ struct Damage
 struct Missed
 {
     Missed(QStringList list);
+
+    [[nodiscard]] bool operator==(const Missed &o) const;
+
     MissType type;
     // bool isOffHand;
     uint32_t amountMissed{0};
@@ -152,7 +171,7 @@ struct Heal
 struct HealAbsorbed
 {
     Object extra;
-    Spell extraSpell;
+    SpellInfo extraSpell;
     uint32_t absorbedAmount;
     uint32_t totalAmount;
 };
@@ -184,13 +203,13 @@ using Leech = Drain;
 struct Interrupt
 {
     Interrupt(QStringList list);
-    Spell extraSpell;
+    SpellInfo extraSpell;
 };
 
 struct Dispell
 {
     Dispell(QStringList list);
-    Spell extraSpell;
+    SpellInfo extraSpell;
     AuraType aura;
 };
 
@@ -231,7 +250,7 @@ using AuraBroken = AuraRefresh;
 
 struct AuraBrokenSpell
 {
-    Spell extra;
+    SpellInfo extra;
     AuraType type;
 };
 
@@ -259,33 +278,41 @@ struct SpellCastSucces : public detail::prefix::Spell,
                          public detail::suffix::CastSucces
 {
     SpellCastSucces(QStringList list) : detail::prefix::Spell{list} {}
+    SpellCastSucces(const detail::prefix::Spell &prefix,
+                    const detail::suffix::CastSucces &suffix);
+
+    [[nodiscard]] bool operator==(const SpellCastSucces &o) const;
 };
 
 struct SpellDamage : public detail::prefix::Spell, public detail::suffix::Damage
 {
     SpellDamage(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::Damage{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::Damage{
+                                                     list.mid(3)}
     {
     }
+
+    [[nodiscard]] bool operator==(const SpellDamage &o) const;
 };
 
 struct SpellPeriodicDamage : public detail::prefix::SpellPeriodic,
                              public detail::suffix::Damage
 {
     SpellPeriodicDamage(QStringList list)
-        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
-          detail::suffix::Damage{list.mid(3)}
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)}, detail::suffix::Damage{
+                                                             list.mid(3)}
     {
     }
+
+    [[nodiscard]] bool operator==(const SpellPeriodicDamage &o) const;
 };
 
 struct SpellAuraApplied : public detail::prefix::Spell,
                           public detail::suffix::AuraApplied
 {
     SpellAuraApplied(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::AuraApplied{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::AuraApplied{
+                                                     list.mid(3)}
     {
     }
 };
@@ -294,8 +321,8 @@ struct SpellAuraRemoved : public detail::prefix::Spell,
                           public detail::suffix::AuraRemoved
 {
     SpellAuraRemoved(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::AuraRemoved{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::AuraRemoved{
+                                                     list.mid(3)}
     {
     }
 };
@@ -304,8 +331,8 @@ struct SpellAuraRefresh : public detail::prefix::Spell,
                           public detail::suffix::AuraRefresh
 {
     SpellAuraRefresh(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::AuraRefresh{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::AuraRefresh{
+                                                     list.mid(3)}
     {
     }
 };
@@ -314,8 +341,8 @@ struct SpellEnergize : public detail::prefix::Spell,
                        public detail::suffix::Energize
 {
     SpellEnergize(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::Energize{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::Energize{
+                                                     list.mid(3)}
     {
     }
 };
@@ -326,14 +353,16 @@ struct SwingDamage : public detail::prefix::Swing, public detail::suffix::Damage
         : detail::prefix::Swing{}, detail::suffix::Damage{list}
     {
     }
+
+    [[nodiscard]] bool operator==(const SwingDamage &o) const;
 };
 
 struct SpellPeriodicHeal : public detail::prefix::SpellPeriodic,
                            public detail::suffix::Heal
 {
     SpellPeriodicHeal(QStringList list)
-        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
-          detail::suffix::Heal{list.mid(3)}
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)}, detail::suffix::Heal{
+                                                             list.mid(3)}
     {
     }
 };
@@ -367,8 +396,8 @@ struct SpellPeriodicEnergize : public detail::prefix::SpellPeriodic,
 struct SpellHeal : public detail::prefix::Spell, public detail::suffix::Heal
 {
     SpellHeal(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::Heal{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::Heal{
+                                                     list.mid(3)}
     {
     }
 };
@@ -379,19 +408,27 @@ struct SwingMissed : public detail::prefix::Swing, public detail::suffix::Missed
         : detail::prefix::Swing{}, detail::suffix::Missed{list}
     {
     }
+
+    [[nodiscard]] bool operator==(const SwingMissed &o) const;
 };
 
 struct PartyKill
 {
     PartyKill(QStringList list);
+
+    [[nodiscard]] constexpr bool
+    operator==([[maybe_unused]] const PartyKill &o) const
+    {
+        return true;
+    }
 };
 
 struct SpellCastFailed : public detail::prefix::Spell,
                          public detail::suffix::CastFailed
 {
     SpellCastFailed(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::CastFailed{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::CastFailed{
+                                                     list.mid(3)}
     {
     }
 };
@@ -399,6 +436,10 @@ struct SpellCastFailed : public detail::prefix::Spell,
 struct EnchantApplied
 {
     EnchantApplied(QStringList list);
+    EnchantApplied(const QString &name, const Item &item);
+
+    [[nodiscard]] bool operator==(const EnchantApplied &o) const;
+
     QString name;
     Item item;
 };
@@ -406,18 +447,20 @@ struct EnchantApplied
 struct SpellMissed : public detail::prefix::Spell, public detail::suffix::Missed
 {
     SpellMissed(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::Missed{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::Missed{
+                                                     list.mid(3)}
     {
     }
+
+    [[nodiscard]] bool operator==(const SpellMissed &o) const;
 };
 
 struct SpellInterrupt : public detail::prefix::Spell,
                         public detail::suffix::Interrupt
 {
     SpellInterrupt(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::Interrupt{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::Interrupt{
+                                                     list.mid(3)}
     {
     }
 };
@@ -426,18 +469,20 @@ struct SpellPeriodicMissed : public detail::prefix::SpellPeriodic,
                              public detail::suffix::Missed
 {
     SpellPeriodicMissed(QStringList list)
-        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
-          detail::suffix::Missed{list.mid(3)}
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)}, detail::suffix::Missed{
+                                                             list.mid(3)}
     {
     }
+
+    [[nodiscard]] bool operator==(const SpellPeriodicMissed &o) const;
 };
 
 struct SpellDispel : public detail::prefix::Spell,
                      public detail::suffix::Dispell
 {
     SpellDispel(QStringList list)
-        : detail::prefix::Spell{list.mid(0, 3)},
-          detail::suffix::Dispell{list.mid(3)}
+        : detail::prefix::Spell{list.mid(0, 3)}, detail::suffix::Dispell{
+                                                     list.mid(3)}
     {
     }
 };
@@ -454,8 +499,8 @@ struct SpellPeriodicLeech : public detail::prefix::SpellPeriodic,
                             public detail::suffix::Leech
 {
     SpellPeriodicLeech(QStringList list)
-        : detail::prefix::SpellPeriodic{list.mid(0, 3)},
-          detail::suffix::Leech{list.mid(3)}
+        : detail::prefix::SpellPeriodic{list.mid(0, 3)}, detail::suffix::Leech{
+                                                             list.mid(3)}
     {
     }
 };

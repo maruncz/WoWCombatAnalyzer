@@ -9,6 +9,12 @@
 class LogLine
 {
 public:
+    LogLine(const QDateTime &timestamp, const Object &sourceObject,
+            const Object &destObject, SubEvent subeventType,
+            const variant_t &subEventValue);
+
+    LogLine() = default;
+
     [[nodiscard]] static LogLine fromRawData(QString s);
 
     [[nodiscard]] bool filter() const;
@@ -22,6 +28,8 @@ public:
     SubEvent getSubeventType() const;
 
     variant_t getSubEventValue() const;
+
+    [[nodiscard]] bool operator==(const LogLine &o) const;
 
 private:
     [[nodiscard]] static QStringList parseTokens(QString s);
