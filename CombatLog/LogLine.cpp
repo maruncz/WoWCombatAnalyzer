@@ -37,7 +37,31 @@ QStringList LogLine::parseTokens(QString s)
 
     ret.append(s.mid(0, time_sep));
     s.remove(0, time_sep + 2);
-    auto list = s.split(',');
+
+    QStringList list;
+    {
+        bool inQuotes{false};
+        QString::size_type lastComma{0};
+        for (QString::size_type i = 0; i < s.size(); ++i)
+        {
+            if ((s.at(i) == ',') && (!inQuotes))
+            {
+                list.append(s.mid(lastComma, i - lastComma));
+                lastComma = i + 1;
+            }
+
+            if (s.at(i) == '"')
+            {
+                inQuotes = !inQuotes;
+            }
+
+            if (s.at(i) == '\n')
+            {
+                list.append(s.mid(lastComma, i - lastComma));
+                break;
+            }
+        }
+    }
 
     for (auto &&e : list)
     {

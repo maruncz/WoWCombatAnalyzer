@@ -14,14 +14,15 @@ param comma{
     ":/test-data/comma.txt",
     CombatLog{
         QList<LogLine>{LogLine{
-            QDateTime::fromSecsSinceEpoch(0),
-            {0, "nil", {0x80000000}},
+            QDateTime::fromString("2023/9/30 20:23:30.678",
+                                  "yyyy/M/dd hh:mm:ss.zzz"),
+            {0, "", {0x80000000}},
             {0x00000000000291EC, "test", {0x514}},
-            SubEvent::ENCHANT_APPLIED,
+            SubEvent::ENCHANT_REMOVED,
             variant_t{EnchantApplied{
                 "Grand Firestone",
                 Item{50427, "Bloodsurge, Kel'Thuzad's Blade of Agony"}}}}},
-        QStringList{}, QStringList{"test"}}};
+        QStringList{""}, QStringList{"test"}}};
 
 param simple{
     ":/test-data/simple.txt",
