@@ -45,7 +45,7 @@ private:
     QStringList sourceNamesList;
     QStringList targetNamesList;
 
-    CombatLog *originalLog;
+    CombatLog* originalLog {nullptr};
     QChart chart;
     QValueAxis axisX;
     QValueAxis axisY;

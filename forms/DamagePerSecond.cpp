@@ -24,7 +24,7 @@ DamagePerSecond::~DamagePerSecond()
 
 void DamagePerSecond::updateChart()
 {
-    if (!originalLog)
+    if (originalLog == nullptr)
     {
         throw std::runtime_error("log ptr null");
     }
@@ -56,9 +56,9 @@ void DamagePerSecond::updateChart()
                 return false;
             }
 
-            if (!((l.getSubeventType() == SubEvent::SPELL_DAMAGE) ||
-                  (l.getSubeventType() == SubEvent::SPELL_PERIODIC_DAMAGE) ||
-                  (l.getSubeventType() == SubEvent::SWING_DAMAGE)))
+            if ((l.getSubeventType() != SubEvent::SPELL_DAMAGE)
+                && (l.getSubeventType() != SubEvent::SPELL_PERIODIC_DAMAGE)
+                && (l.getSubeventType() != SubEvent::SWING_DAMAGE))
             {
                 return false;
             }
@@ -85,7 +85,7 @@ void DamagePerSecond::updateChart()
             temporaryLog.getLines().front().getTimestamp().toMSecsSinceEpoch() -
             timeOffset;
 
-        auto line = new QLineSeries(this);
+        auto* line = new QLineSeries(this);
         SubSampler sampler{ui->doubleSpinBoxFilter->value() * 1000,
                            static_cast<qreal>(lineOffset)};
 

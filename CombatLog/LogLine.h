@@ -9,9 +9,8 @@
 class LogLine
 {
 public:
-    LogLine(const QDateTime &timestamp, const Object &sourceObject,
-            const Object &destObject, SubEvent subeventType,
-            const variant_t &subEventValue);
+    LogLine(QDateTime timestamp, Object sourceObject, Object destObject,
+            SubEvent subeventType, variant_t subEventValue);
 
     LogLine() = default;
 

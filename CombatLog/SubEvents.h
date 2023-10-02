@@ -77,7 +77,7 @@ struct Object
 struct SpellInfo
 {
     SpellInfo(const QStringList& list);
-    SpellInfo(const QString &name, uint32_t id, uint8_t school);
+    SpellInfo(QString name, uint32_t id, uint8_t school);
 
     [[nodiscard]] bool operator==(const SpellInfo &o) const;
 
@@ -89,7 +89,7 @@ struct SpellInfo
 struct Item
 {
     Item(const QStringList& list);
-    Item(uint32_t id, const QString &name);
+    Item(uint32_t id, QString name);
 
     [[nodiscard]] bool operator==(const Item &o) const;
 
@@ -109,7 +109,7 @@ struct Swing
 struct Range
 {
     Range(const QStringList& list) : spell {list} {}
-    Range(const SpellInfo &spell);
+    Range(SpellInfo spell);
     SpellInfo spell;
 
     [[nodiscard]] bool operator==(const Range &o) const;
@@ -173,8 +173,8 @@ struct HealAbsorbed
 {
     Object extra;
     SpellInfo extraSpell;
-    uint32_t absorbedAmount;
-    uint32_t totalAmount;
+    uint32_t absorbedAmount {0};
+    uint32_t totalAmount {0};
 };
 
 struct Absorbed
@@ -437,9 +437,9 @@ struct SpellCastFailed : public detail::prefix::Spell,
 struct EnchantApplied
 {
     EnchantApplied(const QStringList& list);
-    EnchantApplied(const QString &name, const Item &item);
+    EnchantApplied(QString name, Item item);
 
-    [[nodiscard]] bool operator==(const EnchantApplied &o) const;
+    [[nodiscard]] bool operator==(const EnchantApplied& o) const;
 
     QString name;
     Item item;

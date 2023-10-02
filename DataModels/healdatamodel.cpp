@@ -20,7 +20,9 @@ QVariant HealDataModel::headerData(int section, Qt::Orientation orientation,
 int HealDataModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
+    {
         return 0;
+    }
 
     return combatlog->getLines().size();
 }
@@ -28,7 +30,9 @@ int HealDataModel::rowCount(const QModelIndex &parent) const
 int HealDataModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
+    {
         return 0;
+    }
 
     return header.size();
 }
@@ -36,7 +40,9 @@ int HealDataModel::columnCount(const QModelIndex &parent) const
 QVariant HealDataModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+    {
+        return {};
+    }
 
     if (role == Qt::DisplayRole)
     {
@@ -94,5 +100,5 @@ QVariant HealDataModel::data(const QModelIndex &index, int role) const
         }
     }
 
-    return QVariant();
+    return {};
 }

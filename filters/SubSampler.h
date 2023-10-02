@@ -8,11 +8,11 @@
 class SubSampler
 {
 public:
-    SubSampler(qreal period, qreal startTime) : samplePeriod(period)
+    SubSampler(qreal period, qreal startTime)
+        : samplePeriod(period),
+          currentTimepoint((std::floor(startTime / samplePeriod) * samplePeriod)
+                           + samplePeriod)
     {
-        currentTimepoint =
-            (std::floor(startTime / samplePeriod) * samplePeriod) +
-            samplePeriod;
         minmaxX.first = currentTimepoint;
     }
 
@@ -20,9 +20,9 @@ public:
 
     std::pair<qreal, qreal> finalize();
 
-    std::pair<qreal, qreal> getMinmaxX() const;
+    [[nodiscard]] std::pair<qreal, qreal> getMinmaxX() const;
 
-    std::pair<qreal, qreal> getMinmaxY() const;
+    [[nodiscard]] std::pair<qreal, qreal> getMinmaxY() const;
 
 private:
     QList<std::pair<qreal, qreal>> advance(qreal timepoint);

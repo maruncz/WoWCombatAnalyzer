@@ -2,12 +2,13 @@
 #include "defs.h"
 #include "exceptions.h"
 #include <QDebug>
+#include <utility>
 
-LogLine::LogLine(const QDateTime &timestamp, const Object &sourceObject,
-                 const Object &destObject, SubEvent subeventType,
-                 const variant_t &subEventValue)
-    : timestamp{timestamp}, sourceObject{sourceObject}, destObject{destObject},
-      subeventType{subeventType}, subEventValue{subEventValue}
+LogLine::LogLine(QDateTime timestamp, Object sourceObject, Object destObject,
+                 SubEvent subeventType, variant_t subEventValue)
+    : timestamp {std::move(timestamp)}, sourceObject {std::move(sourceObject)},
+      destObject {std::move(destObject)}, subeventType {subeventType},
+      subEventValue {std::move(subEventValue)}
 {
 }
 

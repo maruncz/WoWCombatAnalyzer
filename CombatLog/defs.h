@@ -88,7 +88,7 @@ enum RaidFlags
     COMBATLOG_OBJECT_RAIDTARGET_MASK = 0x000000FF
 };
 
-enum class SpellSchool
+enum class SpellSchool : unsigned
 {
     Physical = 1,
     Holy     = 2,

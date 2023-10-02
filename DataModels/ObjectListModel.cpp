@@ -10,9 +10,11 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
     // list's size. For all other (valid) parents, rowCount() should return 0 so
     // that it does not become a tree model.
     if (parent.isValid())
+    {
         return 0;
+    }
 
-    if (!list)
+    if (list == nullptr)
     {
         return 0;
     }
@@ -23,9 +25,11 @@ int ObjectListModel::rowCount(const QModelIndex &parent) const
 QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+    {
+        return {};
+    }
 
-    if (!list)
+    if (list == nullptr)
     {
         return {};
     }
@@ -41,7 +45,7 @@ QVariant ObjectListModel::data(const QModelIndex &index, int role) const
 void ObjectListModel::setList(const QStringList *newList)
 {
     auto oldRows{0};
-    if (list)
+    if (list != nullptr)
     {
         oldRows = list->size();
     }

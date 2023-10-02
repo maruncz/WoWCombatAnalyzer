@@ -10,10 +10,10 @@ class CombatLog
 {
 public:
     CombatLog() = default;
-    CombatLog(const QList<LogLine> &lines, const QStringList &sourceNames,
-              const QStringList &targetNames);
+    CombatLog(const QList<LogLine>& lines, QStringList sourceNames,
+              QStringList targetNames);
 
-    [[nodiscard]] static CombatLog fromFile(QString filename);
+    [[nodiscard]] static CombatLog fromFile(const QString& filename);
 
     [[nodiscard]] const QList<LogLine> &getLines() const;
 

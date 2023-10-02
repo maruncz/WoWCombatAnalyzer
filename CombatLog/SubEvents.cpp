@@ -1,11 +1,12 @@
 #include "SubEvents.h"
-#include "LineParser.h"
 #include "exceptions.h"
+#include "LineParser.h"
+#include <utility>
 
 UnitFlags UnitFlags::fromNum(uint32_t n)
 {
-    static constexpr uint32_t unusedBits{Reaction::unused | Type::unused};
-    if (n & unusedBits)
+    static constexpr uint32_t unusedBits {Reaction::unused | Type::unused};
+    if ((n & unusedBits) != 0u)
     {
         throw CombatLogParserException(
             QStringLiteral("undefined bits set: 0x%1")
@@ -82,8 +83,8 @@ SpellInfo::SpellInfo(const QStringList& list)
     school = LineParser::parseSpellSchool(list.at(2));
 }
 
-SpellInfo::SpellInfo(const QString &name, uint32_t id, uint8_t school)
-    : name{name}, id{id}, school{school}
+SpellInfo::SpellInfo(QString name, uint32_t id, uint8_t school)
+    : name {std::move(name)}, id {id}, school {school}
 {
 }
 
@@ -121,7 +122,7 @@ Item::Item(const QStringList& list)
     name = LineParser::removequotes(list.at(1));
 }
 
-Item::Item(uint32_t id, const QString &name) : id{id}, name{name} {}
+Item::Item(uint32_t id, QString name) : id {id}, name {std::move(name)} {}
 
 bool Item::operator==(const Item &o) const
 {
@@ -261,7 +262,7 @@ detail::suffix::AuraAppliedDose::AuraAppliedDose(const QStringList& list)
 
 detail::suffix::Missed::Missed(const QStringList& list)
 {
-    if (list.size() < 1)
+    if (list.empty())
     {
         throw CombatLogParserException(
             QStringLiteral("wrong list size, expected 1, got %1")
@@ -312,7 +313,7 @@ bool detail::suffix::Missed::operator==(Missed o) const
 
 PartyKill::PartyKill(const QStringList& list)
 {
-    if (list.size() != 0)
+    if (!list.empty())
     {
         throw CombatLogParserException(
             QStringLiteral("wrong list size, expected 0, got %1 : %2")
@@ -350,8 +351,8 @@ EnchantApplied::EnchantApplied(const QStringList& list) : item {list.mid(1)}
     name = LineParser::removequotes(list.at(0));
 }
 
-EnchantApplied::EnchantApplied(const QString &name, const Item &item)
-    : name{name}, item{item}
+EnchantApplied::EnchantApplied(QString name, Item item)
+    : name {std::move(name)}, item {std::move(item)}
 {
 }
 
@@ -405,7 +406,7 @@ detail::suffix::Drain::Drain(const QStringList& list)
     extraAmount = LineParser::parseDamageAmount(list.at(2));
 }
 
-detail::prefix::Range::Range(const SpellInfo &spell) : spell{spell} {}
+detail::prefix::Range::Range(SpellInfo spell) : spell {std::move(spell)} {}
 
 bool detail::prefix::Range::operator==(const Range &o) const
 {

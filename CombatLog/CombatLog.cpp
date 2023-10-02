@@ -1,15 +1,16 @@
 #include "CombatLog.h"
 #include "exceptions.h"
 #include <QFile>
+#include <utility>
 
-CombatLog::CombatLog(const QList<LogLine> &lines,
-                     const QStringList &sourceNames,
-                     const QStringList &targetNames)
-    : lines{lines}, sourceNames{sourceNames}, targetNames{targetNames}
+CombatLog::CombatLog(const QList<LogLine>& lines, QStringList sourceNames,
+                     QStringList targetNames)
+    : lines {lines}, sourceNames {std::move(sourceNames)},
+      targetNames {std::move(targetNames)}
 {
 }
 
-CombatLog CombatLog::fromFile(QString filename)
+CombatLog CombatLog::fromFile(const QString& filename)
 {
     QFile file{filename};
 
