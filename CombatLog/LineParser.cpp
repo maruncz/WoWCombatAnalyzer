@@ -4,7 +4,7 @@
 QStringList LineParser::splitLine(QString s)
 {
     QStringList ret;
-    auto time_sep = s.indexOf("  ");
+    auto time_sep = s.indexOf(QLatin1String("  "));
     if (time_sep == -1)
     {
         throw CombatLogParserException("cannot find timestamp");
@@ -15,6 +15,8 @@ QStringList LineParser::splitLine(QString s)
     s.remove(0, time_sep);
     auto list = s.split(',');
 
+    ret.reserve(ret.size() + list.size());
+
     for (auto &&e : list)
     {
         ret.append(e);
@@ -22,7 +24,7 @@ QStringList LineParser::splitLine(QString s)
     return ret;
 }
 
-uint64_t LineParser::parseGUID(QString s)
+uint64_t LineParser::parseGUID(const QString& s)
 {
     return parseNumber<uint64_t>(s, 16);
 }
@@ -32,130 +34,135 @@ QString LineParser::removequotes(QString s)
     if ((!s.endsWith('"')) || (!s.startsWith('"')))
     {
         throw CombatLogParserException(
-            QString("bad string format: %1").arg(s).toStdString());
+            QStringLiteral("bad string format: %1").arg(s).toStdString());
     }
     s.remove('"');
     return s;
 }
 
-UnitFlags LineParser::parseUnitFlags(QString s)
+UnitFlags LineParser::parseUnitFlags(const QString& s)
 {
     UnitFlags ret;
     ret = UnitFlags::fromNum(parseNumber<uint32_t>(s, 16));
     return ret;
 }
 
-uint32_t LineParser::parseSpellId(QString s)
+uint32_t LineParser::parseSpellId(const QString& s)
 {
     return parseNumber<uint32_t>(s, 10);
 }
 
-uint8_t LineParser::parseSpellSchool(QString s)
+uint8_t LineParser::parseSpellSchool(const QString& s)
 {
     return parseNumber<uint8_t>(s, 16);
 }
 
-uint32_t LineParser::parseDamageAmount(QString s)
+uint32_t LineParser::parseDamageAmount(const QString& s)
 {
     return parseNumber<uint32_t>(s, 10);
 }
 
-bool LineParser::parseBool(QString s)
+bool LineParser::parseBool(const QString& s)
 {
-    if (s == "1")
+    if (s == QLatin1String("1"))
     {
         return true;
     }
-    else if (s == "nil")
+    else if (s == QLatin1String("nil"))
     {
         return false;
     }
     else
     {
         throw CombatLogParserException(
-            QString("unexpected bool value: %1").arg(s).toStdString());
+            QStringLiteral("unexpected bool value: %1").arg(s).toStdString());
     }
 }
 
-AuraType LineParser::parseAuraType(QString s)
+AuraType LineParser::parseAuraType(const QString& s)
 {
-    if (s == "BUFF")
+    if (s == QLatin1String("BUFF"))
     {
         return AuraType::BUFF;
     }
-    else if (s == "DEBUFF")
+    else if (s == QLatin1String("DEBUFF"))
     {
         return AuraType::DEBUFF;
     }
     else
     {
         throw CombatLogParserException(
-            QString("unexpected aura type value: %1").arg(s).toStdString());
+            QStringLiteral("unexpected aura type value: %1")
+                .arg(s)
+                .toStdString());
     }
 }
 
-PowerType LineParser::parsePowerType(QString s)
+PowerType LineParser::parsePowerType(const QString& s)
 {
     auto val = parseNumber<uint8_t>(s, 10);
     if (val >= 26)
     {
         throw CombatLogParserException(
-            QString("unexpected power type: %1").arg(val).toStdString());
+            QStringLiteral("unexpected power type: %1").arg(val).toStdString());
     }
 
     return static_cast<PowerType>(val);
 }
 
-MissType LineParser::parseMissType(QString s)
+MissType LineParser::parseMissType(const QString& s)
 {
-    if (s == "ABSORB")
+    if (s == QLatin1String("ABSORB"))
     {
         return MissType::ABSORB;
     }
-    else if (s == "BLOCK")
+    else if (s == QLatin1String("BLOCK"))
     {
         return MissType::BLOCK;
     }
-    else if (s == "DEFLECT")
+    else if (s == QLatin1String("DEFLECT"))
     {
         return MissType::DEFLECT;
     }
-    else if (s == "DODGE")
+    else if (s == QLatin1String("DODGE"))
     {
         return MissType::DODGE;
     }
-    else if (s == "EVADE")
+    else if (s == QLatin1String("EVADE"))
     {
         return MissType::EVADE;
     }
-    else if (s == "IMMUNE")
+    else if (s == QLatin1String("IMMUNE"))
     {
         return MissType::IMMUNE;
     }
-    else if (s == "MISS")
+    else if (s == QLatin1String("MISS"))
     {
         return MissType::MISS;
     }
-    else if (s == "PARRY")
+    else if (s == QLatin1String("PARRY"))
     {
         return MissType::PARRY;
     }
-    else if (s == "REFLECT")
+    else if (s == QLatin1String("REFLECT"))
     {
         return MissType::REFLECT;
     }
-    else if (s == "RESIST")
+    else if (s == QLatin1String("RESIST"))
     {
         return MissType::RESIST;
     }
     else
     {
         throw CombatLogParserException(
-            QString("unexpected miss type value: %1").arg(s).toStdString());
+            QStringLiteral("unexpected miss type value: %1")
+                .arg(s)
+                .toStdString());
     }
 }
 
-template<typename T> T LineParser::parseNumber(QString s, uint8_t base)
+template<typename T>
+T LineParser::parseNumber(const QString& s, uint8_t base)
 {
     bool ok{false};
     T val{0};
@@ -181,7 +188,7 @@ template<typename T> T LineParser::parseNumber(QString s, uint8_t base)
         if (tmp > 255)
         {
             throw CombatLogParserException(
-                QString("out of range: %1").arg(tmp).toStdString());
+                QStringLiteral("out of range: %1").arg(tmp).toStdString());
         }
         val = static_cast<T>(tmp);
     }
@@ -193,7 +200,7 @@ template<typename T> T LineParser::parseNumber(QString s, uint8_t base)
     if (!ok)
     {
         throw CombatLogParserException(
-            QString("error parsing number: %1, base: %2")
+            QStringLiteral("error parsing number: %1, base: %2")
                 .arg(s)
                 .arg(base)
                 .toStdString());

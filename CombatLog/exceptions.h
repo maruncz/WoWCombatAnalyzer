@@ -8,15 +8,21 @@
 class CombatLogParserException : public std::exception
 {
 public:
+    CombatLogParserException(const CombatLogParserException&) = delete;
+    CombatLogParserException(CombatLogParserException&&)      = delete;
+    CombatLogParserException& operator=(const CombatLogParserException&)
+        = delete;
+    CombatLogParserException& operator=(CombatLogParserException&&) = delete;
     CombatLogParserException(
         std::string msg,
         std::source_location loc = std::source_location::current());
+    ~CombatLogParserException() override = default;
 
-    const char *what() const noexcept override;
+    [[nodiscard]] const char* what() const noexcept override;
 
-    std::string getMessage() const;
+    [[nodiscard]] std::string getMessage() const;
 
-    std::source_location getPlace() const;
+    [[nodiscard]] std::source_location getPlace() const;
 
 private:
     std::string message;

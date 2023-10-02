@@ -15,7 +15,7 @@ public:
 
     LogLine() = default;
 
-    [[nodiscard]] static LogLine fromRawData(QString s);
+    [[nodiscard]] static LogLine fromRawData(const QString& s);
 
     [[nodiscard]] bool filter() const;
 
@@ -33,10 +33,10 @@ public:
 
 private:
     [[nodiscard]] static QStringList parseTokens(QString s);
-    [[nodiscard]] static QDateTime parseTimestamp(QString s);
-    [[nodiscard]] static SubEvent subeventTypeFromString(QString s);
-    [[nodiscard]] static variant_t subeventValueFromString(SubEvent type,
-                                                           QStringList list);
+    [[nodiscard]] static QDateTime parseTimestamp(const QString& s);
+    [[nodiscard]] static SubEvent subeventTypeFromString(const QString& s);
+    [[nodiscard]] static variant_t
+    subeventValueFromString(SubEvent type, const QStringList& list);
 
     QDateTime timestamp;
     Object sourceObject;

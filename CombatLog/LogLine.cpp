@@ -11,7 +11,7 @@ LogLine::LogLine(const QDateTime &timestamp, const Object &sourceObject,
 {
 }
 
-LogLine LogLine::fromRawData(QString s)
+LogLine LogLine::fromRawData(const QString& s)
 {
     auto line = parseTokens(s);
     LogLine ret;
@@ -29,7 +29,7 @@ QStringList LogLine::parseTokens(QString s)
 {
     QStringList ret;
 
-    auto time_sep = s.indexOf("  ");
+    auto time_sep = s.indexOf(QLatin1String("  "));
     if (time_sep == -1)
     {
         throw CombatLogParserException("cannot find timestamp");
@@ -71,169 +71,170 @@ QStringList LogLine::parseTokens(QString s)
     return ret;
 }
 
-QDateTime LogLine::parseTimestamp(QString s)
+QDateTime LogLine::parseTimestamp(const QString& s)
 {
-    auto ret = QDateTime::fromString(s, "M/dd hh:mm:ss.zzz");
+    auto ret = QDateTime::fromString(s, QStringLiteral("M/dd hh:mm:ss.zzz"));
     ret      = ret.addYears(2023 - 1900);
     return ret;
 }
 
-SubEvent LogLine::subeventTypeFromString(QString s)
+SubEvent LogLine::subeventTypeFromString(const QString& s)
 {
-    if (s == "SPELL_CAST_SUCCESS")
+    if (s == QLatin1String("SPELL_CAST_SUCCESS"))
     {
         return SubEvent::SPELL_CAST_SUCCESS;
     }
-    else if (s == "SPELL_AURA_APPLIED")
+    else if (s == QLatin1String("SPELL_AURA_APPLIED"))
     {
         return SubEvent::SPELL_AURA_APPLIED;
     }
-    else if (s == "SPELL_AURA_APPLIED_DOSE")
+    else if (s == QLatin1String("SPELL_AURA_APPLIED_DOSE"))
     {
         return SubEvent::SPELL_AURA_APPLIED_DOSE;
     }
-    else if (s == "SPELL_AURA_REMOVED")
+    else if (s == QLatin1String("SPELL_AURA_REMOVED"))
     {
         return SubEvent::SPELL_AURA_REMOVED;
     }
-    else if (s == "SPELL_AURA_REFRESH")
+    else if (s == QLatin1String("SPELL_AURA_REFRESH"))
     {
         return SubEvent::SPELL_AURA_REFRESH;
     }
-    else if (s == "SPELL_DAMAGE")
+    else if (s == QLatin1String("SPELL_DAMAGE"))
     {
         return SubEvent::SPELL_DAMAGE;
     }
-    else if (s == "SPELL_ENERGIZE")
+    else if (s == QLatin1String("SPELL_ENERGIZE"))
     {
         return SubEvent::SPELL_ENERGIZE;
     }
-    else if (s == "SPELL_PERIODIC_DAMAGE")
+    else if (s == QLatin1String("SPELL_PERIODIC_DAMAGE"))
     {
         return SubEvent::SPELL_PERIODIC_DAMAGE;
     }
-    else if (s == "SWING_DAMAGE")
+    else if (s == QLatin1String("SWING_DAMAGE"))
     {
         return SubEvent::SWING_DAMAGE;
     }
-    else if (s == "DAMAGE_SHIELD")
+    else if (s == QLatin1String("DAMAGE_SHIELD"))
     {
         return SubEvent::DAMAGE_SHIELD;
     }
-    else if (s == "SPELL_PERIODIC_HEAL")
+    else if (s == QLatin1String("SPELL_PERIODIC_HEAL"))
     {
         return SubEvent::SPELL_PERIODIC_HEAL;
     }
-    else if (s == "SPELL_CAST_START")
+    else if (s == QLatin1String("SPELL_CAST_START"))
     {
         return SubEvent::SPELL_CAST_START;
     }
-    else if (s == "SPELL_PERIODIC_ENERGIZE")
+    else if (s == QLatin1String("SPELL_PERIODIC_ENERGIZE"))
     {
         return SubEvent::SPELL_PERIODIC_ENERGIZE;
     }
-    else if (s == "SPELL_HEAL")
+    else if (s == QLatin1String("SPELL_HEAL"))
     {
         return SubEvent::SPELL_HEAL;
     }
-    else if (s == "SWING_MISSED")
+    else if (s == QLatin1String("SWING_MISSED"))
     {
         return SubEvent::SWING_MISSED;
     }
-    else if (s == "PARTY_KILL")
+    else if (s == QLatin1String("PARTY_KILL"))
     {
         return SubEvent::PARTY_KILL;
     }
-    else if (s == "UNIT_DIED")
+    else if (s == QLatin1String("UNIT_DIED"))
     {
         return SubEvent::UNIT_DIED;
     }
-    else if (s == "SPELL_CAST_FAILED")
+    else if (s == QLatin1String("SPELL_CAST_FAILED"))
     {
         return SubEvent::SPELL_CAST_FAILED;
     }
-    else if (s == "ENCHANT_APPLIED")
+    else if (s == QLatin1String("ENCHANT_APPLIED"))
     {
         return SubEvent::ENCHANT_APPLIED;
     }
-    else if (s == "SPELL_MISSED")
+    else if (s == QLatin1String("SPELL_MISSED"))
     {
         return SubEvent::SPELL_MISSED;
     }
-    else if (s == "SPELL_INTERRUPT")
+    else if (s == QLatin1String("SPELL_INTERRUPT"))
     {
         return SubEvent::SPELL_INTERRUPT;
     }
-    else if (s == "SPELL_PERIODIC_MISSED")
+    else if (s == QLatin1String("SPELL_PERIODIC_MISSED"))
     {
         return SubEvent::SPELL_PERIODIC_MISSED;
     }
-    else if (s == "SPELL_DISPEL")
+    else if (s == QLatin1String("SPELL_DISPEL"))
     {
         return SubEvent::SPELL_DISPEL;
     }
-    else if (s == "SPELL_SUMMON")
+    else if (s == QLatin1String("SPELL_SUMMON"))
     {
         return SubEvent::SPELL_SUMMON;
     }
-    else if (s == "DAMAGE_SHIELD_MISSED")
+    else if (s == QLatin1String("DAMAGE_SHIELD_MISSED"))
     {
         return SubEvent::DAMAGE_SHIELD_MISSED;
     }
-    else if (s == "SPELL_PERIODIC_LEECH")
+    else if (s == QLatin1String("SPELL_PERIODIC_LEECH"))
     {
         return SubEvent::SPELL_PERIODIC_LEECH;
     }
-    else if (s == "SPELL_CREATE")
+    else if (s == QLatin1String("SPELL_CREATE"))
     {
         return SubEvent::SPELL_CREATE;
     }
-    else if (s == "RANGE_DAMAGE")
+    else if (s == QLatin1String("RANGE_DAMAGE"))
     {
         return SubEvent::RANGE_DAMAGE;
     }
-    else if (s == "SPELL_INSTAKILL")
+    else if (s == QLatin1String("SPELL_INSTAKILL"))
     {
         return SubEvent::SPELL_INSTAKILL;
     }
-    else if (s == "SPELL_RESURRECT")
+    else if (s == QLatin1String("SPELL_RESURRECT"))
     {
         return SubEvent::SPELL_RESURRECT;
     }
-    else if (s == "ENCHANT_REMOVED")
+    else if (s == QLatin1String("ENCHANT_REMOVED"))
     {
         return SubEvent::ENCHANT_REMOVED;
     }
-    else if (s == "SPELL_EXTRA_ATTACKS")
+    else if (s == QLatin1String("SPELL_EXTRA_ATTACKS"))
     {
         return SubEvent::SPELL_EXTRA_ATTACKS;
     }
-    else if (s == "DAMAGE_SPLIT")
+    else if (s == QLatin1String("DAMAGE_SPLIT"))
     {
         return SubEvent::DAMAGE_SPLIT;
     }
-    else if (s == "SPELL_STOLEN")
+    else if (s == QLatin1String("SPELL_STOLEN"))
     {
         return SubEvent::SPELL_STOLEN;
     }
-    else if (s == "ENVIRONMENTAL_DAMAGE")
+    else if (s == QLatin1String("ENVIRONMENTAL_DAMAGE"))
     {
         return SubEvent::ENVIRONMENTAL_DAMAGE;
     }
-    else if (s == "SPELL_AURA_REMOVED_DOSE")
+    else if (s == QLatin1String("SPELL_AURA_REMOVED_DOSE"))
     {
         return SubEvent::SPELL_AURA_REMOVED_DOSE;
     }
-    else if (s == "RANGE_MISSED")
+    else if (s == QLatin1String("RANGE_MISSED"))
     {
         return SubEvent::RANGE_MISSED;
     }
 
     throw CombatLogParserException(
-        QString("unknown subEvent: %1").arg(s).toStdString());
+        QStringLiteral("unknown subEvent: %1").arg(s).toStdString());
 }
 
-variant_t LogLine::subeventValueFromString(SubEvent type, QStringList list)
+variant_t LogLine::subeventValueFromString(SubEvent type,
+                                           const QStringList& list)
 {
     switch (type)
     {
@@ -281,7 +282,7 @@ variant_t LogLine::subeventValueFromString(SubEvent type, QStringList list)
         case SubEvent::RANGE_MISSED: return {RangeMissed{list}};
     }
     throw CombatLogParserException(
-        QString("unhandled subevent: %1").arg(list.at(0)).toStdString());
+        QStringLiteral("unhandled subevent: %1").arg(list.at(0)).toStdString());
 }
 
 variant_t LogLine::getSubEventValue() const

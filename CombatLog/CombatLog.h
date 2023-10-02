@@ -38,7 +38,7 @@ public:
     [[nodiscard]] bool operator==(const CombatLog &o) const;
 
 private:
-    void append(LogLine line);
+    void append(const LogLine& line);
     void finalize();
 
     QList<LogLine> lines;

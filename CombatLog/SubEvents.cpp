@@ -7,9 +7,10 @@ UnitFlags UnitFlags::fromNum(uint32_t n)
     static constexpr uint32_t unusedBits{Reaction::unused | Type::unused};
     if (n & unusedBits)
     {
-        throw CombatLogParserException(QString("undefined bits set: 0x%1")
-                                           .arg(n & unusedBits, 8, 16)
-                                           .toStdString());
+        throw CombatLogParserException(
+            QStringLiteral("undefined bits set: 0x%1")
+                .arg(n & unusedBits, 8, 16)
+                .toStdString());
     }
 
     UnitFlags ret;
@@ -17,17 +18,17 @@ UnitFlags UnitFlags::fromNum(uint32_t n)
     return ret;
 }
 
-bool UnitFlags::operator==(const UnitFlags &o) const
+bool UnitFlags::operator==(UnitFlags o) const
 {
     return value == o.value;
 }
 
-Object Object::fromString(QStringList list)
+Object Object::fromString(const QStringList& list)
 {
     if (list.size() != 3)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 3, got %1 : %2")
+            QStringLiteral("wrong list size, expected 3, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -66,12 +67,12 @@ bool Object::operator==(const Object &o) const
     return true;
 }
 
-SpellInfo::SpellInfo(QStringList list)
+SpellInfo::SpellInfo(const QStringList& list)
 {
     if (list.size() != 3)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 3, got %1 : %2")
+            QStringLiteral("wrong list size, expected 3, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -106,12 +107,12 @@ bool SpellInfo::operator==(const SpellInfo &o) const
     return true;
 }
 
-Item::Item(QStringList list)
+Item::Item(const QStringList& list)
 {
     if (list.size() != 2)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 2, got %1 : %2")
+            QStringLiteral("wrong list size, expected 2, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -137,12 +138,12 @@ bool Item::operator==(const Item &o) const
     return true;
 }
 
-detail::suffix::Damage::Damage(QStringList list)
+detail::suffix::Damage::Damage(const QStringList& list)
 {
     if (list.size() != 9)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 9, got %1 : %2")
+            QStringLiteral("wrong list size, expected 9, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -197,12 +198,12 @@ bool detail::suffix::Damage::operator==(const Damage &o) const
     return true;
 }
 
-detail::suffix::AuraApplied::AuraApplied(QStringList list)
+detail::suffix::AuraApplied::AuraApplied(const QStringList& list)
 {
     if (list.size() != 1)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 1, got %1 : %2")
+            QStringLiteral("wrong list size, expected 1, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -211,12 +212,12 @@ detail::suffix::AuraApplied::AuraApplied(QStringList list)
     type = LineParser::parseAuraType(list.at(0));
 }
 
-detail::suffix::Energize::Energize(QStringList list)
+detail::suffix::Energize::Energize(const QStringList& list)
 {
     if (list.size() != 2)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 2, got %1 : %2")
+            QStringLiteral("wrong list size, expected 2, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -226,12 +227,12 @@ detail::suffix::Energize::Energize(QStringList list)
     type   = LineParser::parsePowerType(list.at(1));
 }
 
-detail::suffix::Heal::Heal(QStringList list)
+detail::suffix::Heal::Heal(const QStringList& list)
 {
     if (list.size() != 4)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 4, got %1 : %2")
+            QStringLiteral("wrong list size, expected 4, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -243,13 +244,13 @@ detail::suffix::Heal::Heal(QStringList list)
     critical    = LineParser::parseBool(list.at(3));
 }
 
-detail::suffix::AuraAppliedDose::AuraAppliedDose(QStringList list)
+detail::suffix::AuraAppliedDose::AuraAppliedDose(const QStringList& list)
     : AuraApplied(list.mid(0, 1))
 {
     if (list.size() != 2)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 2, got %1 : %2")
+            QStringLiteral("wrong list size, expected 2, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -258,12 +259,12 @@ detail::suffix::AuraAppliedDose::AuraAppliedDose(QStringList list)
     amount = LineParser::parseDamageAmount(list.at(1));
 }
 
-detail::suffix::Missed::Missed(QStringList list)
+detail::suffix::Missed::Missed(const QStringList& list)
 {
     if (list.size() < 1)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 1, got %1")
+            QStringLiteral("wrong list size, expected 1, got %1")
                 .arg(list.size())
                 .toStdString());
     }
@@ -276,7 +277,7 @@ detail::suffix::Missed::Missed(QStringList list)
         if (list.size() != 1)
         {
             throw CombatLogParserException(
-                QString("wrong list size, expected 1, got %1 : %2")
+                QStringLiteral("wrong list size, expected 1, got %1 : %2")
                     .arg(list.size())
                     .arg(list.join(','))
                     .toStdString());
@@ -288,7 +289,7 @@ detail::suffix::Missed::Missed(QStringList list)
         if (list.size() != 2)
         {
             throw CombatLogParserException(
-                QString("wrong list size, expected 2, got %1 : %2")
+                QStringLiteral("wrong list size, expected 2, got %1 : %2")
                     .arg(list.size())
                     .arg(list.join(','))
                     .toStdString());
@@ -296,7 +297,7 @@ detail::suffix::Missed::Missed(QStringList list)
     }
 }
 
-bool detail::suffix::Missed::operator==(const Missed &o) const
+bool detail::suffix::Missed::operator==(Missed o) const
 {
     if (type != o.type)
     {
@@ -309,24 +310,24 @@ bool detail::suffix::Missed::operator==(const Missed &o) const
     return true;
 }
 
-PartyKill::PartyKill(QStringList list)
+PartyKill::PartyKill(const QStringList& list)
 {
     if (list.size() != 0)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 0, got %1 : %2")
+            QStringLiteral("wrong list size, expected 0, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
     }
 }
 
-detail::suffix::CastFailed::CastFailed(QStringList list)
+detail::suffix::CastFailed::CastFailed(const QStringList& list)
 {
     if (list.size() != 1)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 1, got %1 : %2")
+            QStringLiteral("wrong list size, expected 1, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -335,12 +336,12 @@ detail::suffix::CastFailed::CastFailed(QStringList list)
     type = LineParser::removequotes(list.at(0));
 }
 
-EnchantApplied::EnchantApplied(QStringList list) : item{list.mid(1)}
+EnchantApplied::EnchantApplied(const QStringList& list) : item {list.mid(1)}
 {
     if (list.size() != 3)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 3, got %1 : %2")
+            QStringLiteral("wrong list size, expected 3, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -369,14 +370,18 @@ bool EnchantApplied::operator==(const EnchantApplied &o) const
     return true;
 }
 
-detail::suffix::Interrupt::Interrupt(QStringList list) : extraSpell{list} {}
+detail::suffix::Interrupt::Interrupt(const QStringList& list)
+    : extraSpell {list}
+{
+}
 
-detail::suffix::Dispell::Dispell(QStringList list) : extraSpell{list.mid(0, 3)}
+detail::suffix::Dispell::Dispell(const QStringList& list)
+    : extraSpell {list.mid(0, 3)}
 {
     if (list.size() != 4)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 4, got %1 : %2")
+            QStringLiteral("wrong list size, expected 4, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -384,12 +389,12 @@ detail::suffix::Dispell::Dispell(QStringList list) : extraSpell{list.mid(0, 3)}
     aura = LineParser::parseAuraType(list.at(3));
 }
 
-detail::suffix::Drain::Drain(QStringList list)
+detail::suffix::Drain::Drain(const QStringList& list)
 {
     if (list.size() != 3)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 3, got %1 : %2")
+            QStringLiteral("wrong list size, expected 3, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -407,9 +412,9 @@ bool detail::prefix::Range::operator==(const Range &o) const
     return spell == o.spell;
 }
 
-SpellCastSucces::SpellCastSucces(const detail::prefix::Spell &prefix,
-                                 const detail::suffix::CastSucces &suffix)
-    : detail::prefix::Spell{prefix}, detail::suffix::CastSucces{suffix}
+SpellCastSucces::SpellCastSucces(const detail::prefix::Spell& prefix,
+                                 detail::suffix::CastSucces suffix)
+    : detail::prefix::Spell {prefix}, detail::suffix::CastSucces {suffix}
 {
 }
 
@@ -435,7 +440,7 @@ bool SpellPeriodicDamage::operator==(const SpellPeriodicDamage &o) const
            detail::suffix::Damage::operator==(o);
 }
 
-bool SwingMissed::operator==(const SwingMissed &o) const
+bool SwingMissed::operator==(SwingMissed o) const
 {
     return detail::suffix::Missed::operator==(o);
 }
@@ -452,12 +457,12 @@ bool SpellPeriodicMissed::operator==(const SpellPeriodicMissed &o) const
            detail::suffix::Missed::operator==(o);
 }
 
-detail::suffix::ExtraAttacks::ExtraAttacks(QStringList list)
+detail::suffix::ExtraAttacks::ExtraAttacks(const QStringList& list)
 {
     if (list.size() != 1)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 3, got %1 : %2")
+            QStringLiteral("wrong list size, expected 3, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
@@ -466,45 +471,47 @@ detail::suffix::ExtraAttacks::ExtraAttacks(QStringList list)
     amount = LineParser::parseDamageAmount(list.at(0));
 }
 
-detail::prefix::Environmental::Environmental(QStringList list)
+detail::prefix::Environmental::Environmental(const QStringList& list)
 {
     if (list.size() != 1)
     {
         throw CombatLogParserException(
-            QString("wrong list size, expected 3, got %1 : %2")
+            QStringLiteral("wrong list size, expected 3, got %1 : %2")
                 .arg(list.size())
                 .arg(list.join(','))
                 .toStdString());
     }
 
-    type = [](QString s) -> EnvironmentalType
+    type = [](const QString& s) -> EnvironmentalType
     {
-        if (s == "DROWNING")
+        if (s == QLatin1String("DROWNING"))
         {
             return EnvironmentalType::DROWNING;
         }
-        else if (s == "FALLING")
+        else if (s == QLatin1String("FALLING"))
         {
             return EnvironmentalType::FALLING;
         }
-        else if (s == "FATIGUE")
+        else if (s == QLatin1String("FATIGUE"))
         {
             return EnvironmentalType::FATIGUE;
         }
-        else if (s == "FIRE")
+        else if (s == QLatin1String("FIRE"))
         {
             return EnvironmentalType::FIRE;
         }
-        else if (s == "LAVA")
+        else if (s == QLatin1String("LAVA"))
         {
             return EnvironmentalType::LAVA;
         }
-        else if (s == "SLIME")
+        else if (s == QLatin1String("SLIME"))
         {
             return EnvironmentalType::SLIME;
         }
 
         throw CombatLogParserException(
-            QString("unexpected EnvironmentalType: %1").arg(s).toStdString());
+            QStringLiteral("unexpected EnvironmentalType: %1")
+                .arg(s)
+                .toStdString());
     }(list.at(0));
 }

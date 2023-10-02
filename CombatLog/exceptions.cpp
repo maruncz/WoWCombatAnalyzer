@@ -2,7 +2,7 @@
 
 CombatLogParserException::CombatLogParserException(std::string msg,
                                                    std::source_location loc)
-    : message{std::move(msg)}, place{std::move(loc)}
+    : message {std::move(msg)}, place {loc}
 {
 }
 

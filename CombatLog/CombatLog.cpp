@@ -15,9 +15,10 @@ CombatLog CombatLog::fromFile(QString filename)
 
     if (!file.open(QFile::ReadOnly))
     {
-        throw CombatLogParserException(QString("Cannot open log file: %1, %2")
-                                           .arg(filename, file.errorString())
-                                           .toStdString());
+        throw CombatLogParserException(
+            QStringLiteral("Cannot open log file: %1, %2")
+                .arg(filename, file.errorString())
+                .toStdString());
     }
 
     CombatLog ret;
@@ -28,8 +29,9 @@ CombatLog CombatLog::fromFile(QString filename)
 
         if (line.size() >= 512)
         {
-            throw CombatLogParserException(
-                QString("Line too long: %1").arg(line.size()).toStdString());
+            throw CombatLogParserException(QStringLiteral("Line too long: %1")
+                                               .arg(line.size())
+                                               .toStdString());
         }
 
         ret.append(LogLine::fromRawData(line));
@@ -44,7 +46,7 @@ const QList<LogLine> &CombatLog::getLines() const
     return lines;
 }
 
-void CombatLog::append(LogLine line)
+void CombatLog::append(const LogLine& line)
 {
     lines.append(line);
 
