@@ -6,7 +6,7 @@
 UnitFlags UnitFlags::fromNum(uint32_t n)
 {
     static constexpr uint32_t unusedBits {Reaction::unused | Type::unused};
-    if ((n & unusedBits) != 0u)
+    if ((n & unusedBits) != 0U)
     {
         throw CombatLogParserException(
             QStringLiteral("undefined bits set: 0x%1")

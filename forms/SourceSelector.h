@@ -6,7 +6,7 @@
 namespace Ui
 {
 class SourceSelector;
-}
+} // namespace Ui
 
 class SourceSelector : public QWidget
 {

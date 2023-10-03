@@ -46,7 +46,7 @@ void MainWindow::on_pushFileLoad_clicked()
     auto *widget =
         qobject_cast<DamagePerSecond *>(ui->tabWidget->currentWidget());
 
-    if (!widget)
+    if (widget == nullptr)
     {
         throw std::runtime_error("casting error");
     }

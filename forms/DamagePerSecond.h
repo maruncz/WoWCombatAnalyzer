@@ -12,7 +12,7 @@
 namespace Ui
 {
 class DamagePerSecond;
-}
+} // namespace Ui
 
 class CombatLog;
 

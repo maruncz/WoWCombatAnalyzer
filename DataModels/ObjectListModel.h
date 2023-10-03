@@ -13,10 +13,11 @@ public:
     explicit ObjectListModel(QObject *parent = nullptr);
 
     // Basic functionality:
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    [[nodiscard]] int rowCount(const QModelIndex& parent
+                               = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index,
-                  int role = Qt::DisplayRole) const override;
+    [[nodiscard]] QVariant data(const QModelIndex& index,
+                                int role = Qt::DisplayRole) const override;
 
     void setList(const QStringList *newList);
 

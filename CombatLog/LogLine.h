@@ -18,15 +18,15 @@ public:
 
     [[nodiscard]] bool filter() const;
 
-    QDateTime getTimestamp() const;
+    [[nodiscard]] QDateTime getTimestamp() const;
 
-    Object getSourceObject() const;
+    [[nodiscard]] Object getSourceObject() const;
 
-    Object getDestObject() const;
+    [[nodiscard]] Object getDestObject() const;
 
-    SubEvent getSubeventType() const;
+    [[nodiscard]] SubEvent getSubeventType() const;
 
-    variant_t getSubEventValue() const;
+    [[nodiscard]] variant_t getSubEventValue() const;
 
     [[nodiscard]] bool operator==(const LogLine &o) const;
 
